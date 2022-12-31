@@ -1,6 +1,8 @@
-import { Plugin } from "obsidian";
+import { MarkdownView, Plugin } from "obsidian";
 
+import { getTargetElement } from "./modules/htmlElement";
 import { SampleSettingTab } from "./setting";
+import { mountView } from "./views/mount";
 
 import type { MyPluginSettings } from "./setting";
 
@@ -18,12 +20,46 @@ export default class MyPlugin extends Plugin {
 
     this.addSettingTab(new SampleSettingTab(this.app, this));
 
-    console.log(this.app.vault);
-    console.log(this.app.metadataCache);
+    const markdownView = this.app.workspace.getActiveViewOfType(MarkdownView);
+    if (markdownView === null) {
+      return;
+    }
+
+    const activeFile = markdownView.file;
+    if (activeFile === null) {
+      return;
+    }
+
+    const activeFileCache = this.app.metadataCache.getFileCache(activeFile);
+
+    this.injectView();
   }
 
   // eslint-disable-next-line class-methods-use-this
-  onunload() {}
+  onunload() {
+    this.removeView();
+  }
+
+  private injectView() {
+    const markdownView = this.app.workspace.getActiveViewOfType(MarkdownView);
+    if (markdownView === null) {
+      return;
+    }
+    for (const container of getTargetElement(markdownView.containerEl)) {
+      mountView(container);
+    }
+  }
+
+  private removeView() {
+    const markdownViews = this.app.workspace.getLeavesOfType("markdown");
+    for (const markdownView of markdownViews) {
+      for (const element of getTargetElement(markdownView.view.containerEl)) {
+        if (element) {
+          element.remove();
+        }
+      }
+    }
+  }
 
   async loadSettings() {
     this.settings = { ...DEFAULT_SETTINGS, ...(await this.loadData()) };

@@ -8,6 +8,7 @@
         "allowJs": true,
         "noImplicitAny": true,
         "moduleResolution": "node",
+        "jsx": "react",
         "importHelpers": true,
         "isolatedModules": true,
         "strictNullChecks": true,
