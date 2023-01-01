@@ -8,10 +8,5 @@ export const toOriginalFowardLinks = (
   Object.entries(links).map(([srcPath, dest]) => ({
     path: srcPath,
     displayText: path2Name(srcPath),
-    links: Object.keys(dest).map(path => ({
-      path,
-      displayText: path2Name(path),
-    })),
+    links: Object.keys(dest),
   }));
-
-//   return fowardLinks;

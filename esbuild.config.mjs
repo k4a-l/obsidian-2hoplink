@@ -37,7 +37,6 @@ const BASE_CONFIG = {
   target: "es2018",
   logLevel: "info",
   treeShaking: true,
-  plugins: [sassPlugin()],
 };
 
 /** @type {import('esbuild').BuildOptions} */
@@ -46,6 +45,7 @@ const PROD_CONDIG = {
   sourcemap: false,
   outdir: "dist",
   plugins: [
+    sassPlugin(),
     copy({
       resolveFrom: "cwd",
       assets: {
@@ -62,6 +62,7 @@ const DEV_CONDIG = {
   sourcemap: "inline",
   outdir: "./test-vault/.obsidian/plugins/obsidian-2hoplink/",
   plugins: [
+    sassPlugin(),
     copy({
       resolveFrom: "cwd",
       assets: {

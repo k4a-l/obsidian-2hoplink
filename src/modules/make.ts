@@ -1,4 +1,4 @@
-import { path2FileEntity, path2Name, removeBlockReference } from "./utils";
+import { path2Name, removeBlockReference } from "./utils";
 
 import type { FileEntity, LinkEntity, LinksMap, TwohopLink } from "../type";
 import type { TFile, CachedMetadata } from "obsidian";
@@ -25,11 +25,11 @@ export const makeBacklinksMap = ({
 
       // link毎
       file.links.forEach(link => {
-        const currentBackInfo = backLinkMap.get(link.path);
-        const { links, ...info } = file;
-        backLinkMap.set(link.path, {
-          ...link,
-          links: [...(currentBackInfo ? currentBackInfo.links : []), info],
+        const currentBackInfo = backLinkMap.get(link);
+        backLinkMap.set(link, {
+          path: link,
+          displayText: path2Name(link),
+          links: [...(currentBackInfo ? currentBackInfo.links : []), file.path],
         });
       });
     });
@@ -45,31 +45,32 @@ export const makeTwoHopLinks = (
   currentPath: string,
   forwardLinkMap: LinksMap,
   backLinkMap: LinksMap,
-  target: "foward" | "back",
+  target: "forward" | "back",
 ): TwohopLink => {
-  const isNotBaseFile = (it: FileEntity) => it.path !== currentPath;
+  const isNotBaseFile = (it: string) => it !== currentPath;
 
-  const func = (files: FileEntity[]): LinkEntity[] =>
+  const func = (files: string[]): LinkEntity[] =>
     files.reduce((prev, file): LinkEntity[] => {
-      const f = getLinks(file.path, forwardLinkMap).filter(isNotBaseFile);
-      const b = getLinks(file.path, backLinkMap).filter(isNotBaseFile);
+      const f = getLinks(file, forwardLinkMap).filter(isNotBaseFile);
+      const b = getLinks(file, backLinkMap).filter(isNotBaseFile);
 
-      const files = [...new Set([...f, ...b].map(it => it.path))];
+      const links = [...new Set([...f, ...b])];
 
-      if (files.length === 0) return prev;
+      if (links.length === 0) return prev;
       const current: LinkEntity = {
-        ...path2FileEntity(file),
-        links: files.map(it => ({ path: it, displayText: path2Name(it) })),
+        path: file,
+        displayText: path2Name(file),
+        links,
       };
       return [...prev, current];
     }, [] as LinkEntity[]);
 
   return func(
-    getLinks(currentPath, target === "foward" ? forwardLinkMap : backLinkMap),
+    getLinks(currentPath, target === "forward" ? forwardLinkMap : backLinkMap),
   );
 };
 
-export const getLinks = (currentFile: string, linkMap: LinksMap) =>
+export const getLinks = (currentFile: string, linkMap: LinksMap): string[] =>
   linkMap.get(currentFile)?.links ?? [];
 
 export const getForwardLinks = (

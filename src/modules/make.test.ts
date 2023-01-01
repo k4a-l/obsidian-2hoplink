@@ -5,33 +5,39 @@ import type { FileEntity, LinksMap, TwohopLink } from "../type";
 type ValueInMapRecord = LinksMap extends Map<any, infer I> ? I : never;
 type MapObject = { [key: string]: ValueInMapRecord };
 
-const homeCooking: FileEntity = { path: "./homeCooking.md", displayText: "" };
-const diet: FileEntity = { path: "./diet.md", displayText: "" };
+const homeCooking: FileEntity = {
+  path: "./homeCooking.md",
+  displayText: "homeCooking",
+};
+const diet: FileEntity = { path: "./diet.md", displayText: "diet" };
 const favoriteFoot: FileEntity = {
   path: "./favoriteFoot.md",
-  displayText: "",
+  displayText: "favoriteFoot",
 };
-const highCalorie: FileEntity = { path: "./highCalorie.md", displayText: "" };
-const ramen: FileEntity = { path: "./Ramen.md", displayText: "" };
-const sushi: FileEntity = { path: "./Sushi.md", displayText: "" };
+const highCalorie: FileEntity = {
+  path: "./highCalorie.md",
+  displayText: "highCalorie",
+};
+const ramen: FileEntity = { path: "./Ramen.md", displayText: "Ramen" };
+const sushi: FileEntity = { path: "./Sushi.md", displayText: "Sushi" };
 
 const linkObject: MapObject = {
-  [homeCooking.path]: { ...homeCooking, links: [ramen] },
-  [favoriteFoot.path]: { ...favoriteFoot, links: [ramen, sushi] },
-  [ramen.path]: { ...ramen, links: [highCalorie] },
+  [homeCooking.path]: { ...homeCooking, links: [ramen.path] },
+  [favoriteFoot.path]: { ...favoriteFoot, links: [ramen.path, sushi.path] },
+  [ramen.path]: { ...ramen, links: [highCalorie.path] },
   [sushi.path]: { ...sushi, links: [] },
   [highCalorie.path]: { ...highCalorie, links: [] },
-  [diet.path]: { ...diet, links: [favoriteFoot, highCalorie] },
+  [diet.path]: { ...diet, links: [favoriteFoot.path, highCalorie.path] },
 };
 const fowardLinkMap: LinksMap = new Map(Object.entries(linkObject));
 
 test("make backlink", () => {
   const backLinkObject: MapObject = {
     [homeCooking.path]: { ...homeCooking, links: [] },
-    [favoriteFoot.path]: { ...favoriteFoot, links: [diet] },
-    [ramen.path]: { ...ramen, links: [homeCooking, favoriteFoot] },
-    [sushi.path]: { ...sushi, links: [favoriteFoot] },
-    [highCalorie.path]: { ...highCalorie, links: [ramen, diet] },
+    [favoriteFoot.path]: { ...favoriteFoot, links: [diet.path] },
+    [ramen.path]: { ...ramen, links: [homeCooking.path, favoriteFoot.path] },
+    [sushi.path]: { ...sushi, links: [favoriteFoot.path] },
+    [highCalorie.path]: { ...highCalorie, links: [ramen.path, diet.path] },
     [diet.path]: { ...diet, links: [] },
   };
   const actual: LinksMap = new Map(Object.entries(backLinkObject));
@@ -48,22 +54,19 @@ test("make twohop", () => {
   const foward: TwohopLink = [
     {
       ...{ path: ramen.path, displayText: "Ramen" },
-      links: [
-        { path: highCalorie.path, displayText: "highCalorie" },
-        { path: homeCooking.path, displayText: "homeCooking" },
-      ],
+      links: [highCalorie.path, homeCooking.path],
     },
   ];
 
   const back: TwohopLink = [
     {
       ...{ path: diet.path, displayText: "diet" },
-      links: [{ path: highCalorie.path, displayText: "highCalorie" }],
+      links: [highCalorie.path],
     },
   ];
 
   expect(
-    makeTwoHopLinks(currentFile.path, fowardLinkMap, backlinkMap, "foward"),
+    makeTwoHopLinks(currentFile.path, fowardLinkMap, backlinkMap, "forward"),
   ).toStrictEqual(foward);
 
   expect(

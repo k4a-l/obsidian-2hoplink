@@ -1,5 +1,6 @@
 import * as React from "react";
-import { createRoot } from "react-dom/client";
+import * as ReactDOM from "react-dom";
+import { path2FileEntity } from "src/modules/utils";
 
 import LinkContainer from "./LinkContainer";
 
@@ -15,9 +16,7 @@ export type Props = {
   onClick: React.ComponentProps<typeof LinkContainer>["onClick"];
 };
 
-export const ReactView = (props: Props) => {
-  console.log("rerender");
-  return (
+export const ReactView = (props: Props) => (
     <>
       <LinkContainer
         sourcePath={props.sourcePath}
@@ -37,7 +36,7 @@ export const ReactView = (props: Props) => {
         <LinkContainer
           sourcePath={props.sourcePath}
           key={link.path}
-          fileEntities={link.links}
+          fileEntities={link.links.map(l => path2FileEntity(l))}
           onClick={props.onClick}
           title={link.displayText}
           className={"twohop-links-twohop-links"}
@@ -63,15 +62,19 @@ export const ReactView = (props: Props) => {
       />
     </>
   );
-};
 
 export const mountView = (element: Element, props: Props) => {
-  const root = createRoot(element);
-  root.render(
+  //   const root = createRoot(element);
+  //   root.render(
+  //     <React.StrictMode>
+  //       <ReactView {...props} />
+  //     </React.StrictMode>,
+  //   );
+
+  ReactDOM.render(
     <React.StrictMode>
       <ReactView {...props} />
     </React.StrictMode>,
+    element,
   );
-
-  return root;
 };

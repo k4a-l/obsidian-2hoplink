@@ -17,10 +17,9 @@ import { SampleSettingTab } from "./setting";
 import { mountView } from "./views/ReactView";
 
 import type { TwohopLinkSettings } from "./setting";
-import type { FileEntity, LinkEntity, TagLinks } from "./type";
+import type { FileEntity, LinkEntity, LinksMap, TagLinks } from "./type";
 import type { Props } from "./views/ReactView";
 import type { CachedMetadata, EventRef, TFile } from "obsidian";
-import type { Root } from "react-dom/client";
 
 const DEFAULT_SETTINGS: TwohopLinkSettings = {
   excludesDuplicateLinks: true,
@@ -33,8 +32,6 @@ export default class TwohopLink extends Plugin {
 
   private eventRefs: EventRef[];
 
-  private roots: Root[] = [];
-
   async onload() {
     await this.loadSettings();
 
@@ -42,11 +39,9 @@ export default class TwohopLink extends Plugin {
 
     this.eventRefs = [
       this.app.workspace.on("file-open", () => {
-        console.log("open");
         this.render();
       }),
       this.app.metadataCache.on("resolve", file => {
-        console.log("resolved");
         const activeFile = this.app.workspace.getActiveFile();
         if (activeFile !== null) {
           if (file.path === activeFile.path) {
@@ -60,59 +55,19 @@ export default class TwohopLink extends Plugin {
   }
 
   onunload() {
-    console.log("onunload");
-    console.log(this.eventRefs);
     this.eventRefs.forEach(ref => this.app.metadataCache.offref(ref));
-
     this.removeView();
   }
 
   private render() {
-    this.removeView();
-
     const markdownView = this.app.workspace.getActiveViewOfType(MarkdownView);
-    if (markdownView === null) {
-      return;
-    }
+    if (markdownView === null) return;
 
     const activeFile = markdownView.file;
-    if (activeFile === null) {
-      return;
-    }
+    if (activeFile === null) return;
 
     const activeFileCache = this.app.metadataCache.getFileCache(activeFile);
     if (!activeFileCache) return;
-
-    const b = (it: LinkEntity): [string, LinkEntity] => {
-      const f = it.links.flatMap(f => {
-        const file = this.app.metadataCache.getFirstLinkpathDest(
-          f.path,
-          it.path,
-        );
-
-        if (!file) return [];
-        if (
-          ["md", ...this.settings.effectiveExtension].contains(file.extension)
-        )
-          return f;
-        return [];
-      });
-      return [it.path, { ...it, links: f }];
-    };
-
-    const resolvedFowardLinks = new Map(
-      toOriginalFowardLinks(this.app.metadataCache.resolvedLinks).map(b),
-    );
-    const unresolvedFowardLinks = new Map(
-      toOriginalFowardLinks(this.app.metadataCache.unresolvedLinks).map(b),
-    );
-
-    const backLinks = makeBacklinksMap({
-      resolvedLinks: resolvedFowardLinks,
-      unresolvedLinks: unresolvedFowardLinks,
-    });
-
-    const fowardLinks = getForwardLinks(activeFile, activeFileCache);
 
     const linkedPathSet = new Set<string>();
     const getLinkedPathSet = () =>
@@ -130,18 +85,30 @@ export default class TwohopLink extends Plugin {
       return false;
     };
 
-    const forwardResolvedLinks = fowardLinks
-      .flatMap(l => {
-        const links = getLinks(activeFile.path, resolvedFowardLinks);
-        const file = this.app.metadataCache.getFirstLinkpathDest(
-          l.path,
-          activeFile.path,
-        );
-        const link = links.find(it => it.path === file?.path);
+    const resolvedFowardLinks = this.makeLinkMap(
+      toOriginalFowardLinks(this.app.metadataCache.resolvedLinks),
+    );
+    const unresolvedFowardLinks = this.makeLinkMap(
+      toOriginalFowardLinks(this.app.metadataCache.unresolvedLinks),
+    );
 
-        return link ? link : [];
-      })
-      .filter(it => isFirst(it.path));
+    const backLinks = makeBacklinksMap({
+      resolvedLinks: resolvedFowardLinks,
+      unresolvedLinks: unresolvedFowardLinks,
+    });
+
+    const fowardLinks = getForwardLinks(activeFile, activeFileCache).filter(
+      it => isFirst(it.path),
+    );
+
+    const [forwardResolvedLinks, newLinks] = this.splitByResolve(
+      activeFile,
+      fowardLinks,
+      {
+        resolvedLinks: resolvedFowardLinks,
+        unresolvedLinks: unresolvedFowardLinks,
+      },
+    );
 
     const backwardConnectedLinks: FileEntity[] = getLinks(
       activeFile.path,
@@ -154,14 +121,14 @@ export default class TwohopLink extends Plugin {
       activeFile.path,
       resolvedFowardLinks,
       backLinks,
-      "foward",
+      "forward",
     );
 
     const unresolvedTwoHopLinks = makeTwoHopLinks(
       activeFile.path,
       unresolvedFowardLinks,
       backLinks,
-      "foward",
+      "forward",
     );
 
     const backTwoHopLinks = makeTwoHopLinks(
@@ -180,13 +147,8 @@ export default class TwohopLink extends Plugin {
       if (twohopMap.has(link.path)) return;
       twohopMap.set(link.path, {
         ...link,
-        links: link.links.filter(it => isFirst(it.path)),
+        links: link.links.filter(it => isFirst(it)),
       });
-    });
-
-    const newLinks = fowardLinks.filter(l => {
-      const links = getLinks(activeFile.path, unresolvedFowardLinks);
-      return links.find(it => it.path === l.path);
     });
 
     const tagLinksList = this.getTagLinksList(activeFile, activeFileCache);
@@ -200,6 +162,32 @@ export default class TwohopLink extends Plugin {
       newLinks,
       onClick: this.openFile.bind(this),
     });
+  }
+
+  private splitByResolve(
+    activeFile: TFile,
+    fowardLinks: FileEntity[],
+    linkMap: {
+      resolvedLinks: LinksMap;
+      unresolvedLinks: LinksMap;
+    },
+  ) {
+    const forwardResolvedLinks = fowardLinks.flatMap(l => {
+      const links = getLinks(activeFile.path, linkMap.resolvedLinks);
+      const file = this.app.metadataCache.getFirstLinkpathDest(
+        l.path,
+        activeFile.path,
+      );
+      const link = links.find(it => it === file?.path);
+      return link ? path2FileEntity(link) : [];
+    });
+
+    const newLinks = fowardLinks.filter(l => {
+      const links = getLinks(activeFile.path, linkMap.unresolvedLinks);
+      return links.find(it => it === l.path);
+    });
+
+    return [forwardResolvedLinks, newLinks];
   }
 
   private openFile(
@@ -239,12 +227,10 @@ export default class TwohopLink extends Plugin {
     const activeFileTagSet = new Set(activeFileCache.tags.map(it => it.tag));
     const tagMap: Record<string, string[]> = {};
     for (const markdownFile of this.app.vault.getMarkdownFiles()) {
-      if (markdownFile === activeFile) {
-        continue;
-      }
-      const cachedMetadata = this.app.metadataCache.getFileCache(markdownFile);
+      if (markdownFile === activeFile) continue;
 
-      if (!cachedMetadata || !cachedMetadata.tags) continue;
+      const cachedMetadata = this.app.metadataCache.getFileCache(markdownFile);
+      if (!cachedMetadata?.tags) continue;
 
       for (const tag of cachedMetadata.tags.filter(it =>
         activeFileTagSet.has(it.tag),
@@ -263,30 +249,48 @@ export default class TwohopLink extends Plugin {
     return tagLinksList;
   }
 
+  makeLinkMap(links: LinkEntity[]) {
+    const omitIneffectiveExtention = (it: LinkEntity): LinkEntity => {
+      const f = it.links.flatMap(f => {
+        const file = this.app.metadataCache.getFirstLinkpathDest(f, it.path);
+        if (!file) return f;
+        if (
+          ["md", ...this.settings.effectiveExtension].contains(file.extension)
+        )
+          return f;
+        return [];
+      });
+      return { ...it, links: f };
+    };
+    return new Map(
+      links
+        .map(omitIneffectiveExtention)
+        .map((it): [string, LinkEntity] => [it.path, it]),
+    );
+  }
+
   private injectView(props: Props) {
     const markdownView = this.app.workspace.getActiveViewOfType(MarkdownView);
     if (markdownView === null) {
       return;
     }
     for (const container of getTargetElement(markdownView.containerEl)) {
-      this.roots.push(mountView(container, props));
+      mountView(container, props);
     }
   }
 
   private removeView() {
-    this.roots.forEach(root => {
-      root.unmount();
-    });
-    this.roots = [];
-
-    // const markdownViews = this.app.workspace.getLeavesOfType("markdown");
-    // for (const markdownView of markdownViews) {
-    //   for (const element of getTargetElement(markdownView.view.containerEl)) {
-    //     if (element) {
-    //       element.remove();
-    //     }
-    //   }
-    // }
+    const markdownViews = this.app.workspace.getLeavesOfType("markdown");
+    for (const markdownView of markdownViews) {
+      for (const element of getTargetElement(
+        // @ts-ignore
+        markdownView.containerEl,
+      )) {
+        if (element) {
+          element.remove();
+        }
+      }
+    }
   }
 
   async loadSettings() {
