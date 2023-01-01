@@ -1,11 +1,10 @@
-export type FileEntity = { path: string; name: string };
+export type FileEntity = { path: string; displayText: string };
 
 export type LinkEntity = FileEntity & { links: FileEntity[] };
 
-export type TwoHopLink = FileEntity & {
-  forward: LinkEntity[];
-  back: LinkEntity[];
-};
+export type TwohopLink = LinkEntity[];
 
 /** key: path */
 export type LinksMap = Map<string, LinkEntity>;
+
+export type TagLinks = { tag: string; links: string[] };

@@ -1,3 +1,4 @@
+![[obsidian.png | 100]]
 ```mermaid
 graph RL
 	favoritefood-->Ramen
@@ -11,6 +12,7 @@ graph RL
 
 
 
+[[Untitled.png]]
 
 
-
+#index

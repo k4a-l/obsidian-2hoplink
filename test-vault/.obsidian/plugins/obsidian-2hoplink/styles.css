@@ -1,8 +1,55 @@
-/*
-
-This CSS file will be included with your plugin, and
-available in the app when your plugin is enabled.
-
-If your plugin does not need CSS, delete this file.
-
-*/
+/* src/styles.scss */
+.twohop-links-container {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 50px;
+}
+.twohop-links-section {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.twohop-links-box {
+  box-sizing: border-box;
+  width: 135px;
+  height: 45px;
+  padding: 5px;
+  color: var(--text-normal);
+  cursor: pointer;
+  background-color: var(--background-primary);
+  border: 1px solid var(--background-secondary);
+}
+.twohop-links-box:hover {
+  text-decoration: underline;
+}
+.twohop-links-box-header {
+  font-size: 0.8em;
+  font-weight: bold;
+  background-color: var(--interactive-accent);
+}
+.twohop-links-twohop-links .twohop-links-box-header {
+  color: var(--text-normal);
+  background-color: var(--background-modifier-border);
+}
+.twohop-links-tag-links .twohop-links-box-header {
+  background-color: rgba(255, 216, 209, 0.568627451);
+}
+.twohop-links-new-links .twohop-links-box-header {
+  background-color: var(--interactive-accent);
+}
+.twohop-links-box-preview {
+  font-size: 0.8em;
+  color: var(--text-muted);
+}
+.twohop-links-box-title {
+  font-weight: bold;
+}
+.twohop-links-header {
+  font-size: 0.8em;
+  font-weight: bold;
+  cursor: default;
+  text-decoration: none;
+}
+/*# sourceMappingURL=data:application/json;base64,ewogICJ2ZXJzaW9uIjogMywKICAic291cmNlcyI6IFsiLi4vLi4vLi4vLi4vc3JjL3N0eWxlcy5zY3NzIl0sCiAgInNvdXJjZXNDb250ZW50IjogWyIkZ2FwOiA1cHg7XG5cbi8vIC0tLS0tLS0tLS0tLS0tLS0tLSBDb250YWluZXIgLS0tLS0tLS0tLS0tLS0tLS0tIC8vXG4udHdvaG9wLWxpbmtzLWNvbnRhaW5lciB7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsZXgtZGlyZWN0aW9uOiBjb2x1bW47XG4gIGdhcDogJGdhcDtcbiAgbWFyZ2luLXRvcDogNTBweDtcbn1cblxuLnR3b2hvcC1saW5rcy1zZWN0aW9uIHtcbiAgZGlzcGxheTogZmxleDtcbiAgZmxleC1kaXJlY3Rpb246IHJvdztcbiAgZmxleC13cmFwOiB3cmFwO1xuICBnYXA6ICRnYXA7XG59XG5cbi8vIC0tLS0tLS0tLS0tLS0tLS0tLSBCbG9jayAtLS0tLS0tLS0tLS0tLS0tLS0gLy9cbi50d29ob3AtbGlua3MtYm94IHtcbiAgYm94LXNpemluZzogYm9yZGVyLWJveDtcbiAgd2lkdGg6IDEzNXB4O1xuICBoZWlnaHQ6IDQ1cHg7XG5cbiAgcGFkZGluZzogNXB4O1xuXG4gIGNvbG9yOiB2YXIoLS10ZXh0LW5vcm1hbCk7XG4gIGN1cnNvcjogcG9pbnRlcjtcbiAgYmFja2dyb3VuZC1jb2xvcjogdmFyKC0tYmFja2dyb3VuZC1wcmltYXJ5KTtcbiAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tYmFja2dyb3VuZC1zZWNvbmRhcnkpO1xufVxuXG4udHdvaG9wLWxpbmtzLWJveDpob3ZlciB7XG4gIHRleHQtZGVjb3JhdGlvbjogdW5kZXJsaW5lO1xufVxuXG4vLyAtLS0tLS0tLS0tLS0tLS0tLS0gSGVhZGVyIC0tLS0tLS0tLS0tLS0tLS0tLSAvL1xuXG4udHdvaG9wLWxpbmtzLWJveC1oZWFkZXIge1xuICBmb250LXNpemU6IDAuOGVtO1xuICBmb250LXdlaWdodDogYm9sZDtcbiAgYmFja2dyb3VuZC1jb2xvcjogdmFyKC0taW50ZXJhY3RpdmUtYWNjZW50KTtcblxuICAudHdvaG9wLWxpbmtzLXR3b2hvcC1saW5rcyAmIHtcbiAgICBjb2xvcjogdmFyKC0tdGV4dC1ub3JtYWwpO1xuICAgIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWJhY2tncm91bmQtbW9kaWZpZXItYm9yZGVyKTtcbiAgfVxuICAudHdvaG9wLWxpbmtzLXRhZy1saW5rcyAmIHtcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiAjZmZkOGQxOTE7XG4gIH1cbiAgLnR3b2hvcC1saW5rcy1uZXctbGlua3MgJiB7XG4gICAgYmFja2dyb3VuZC1jb2xvcjogdmFyKC0taW50ZXJhY3RpdmUtYWNjZW50KTtcbiAgfVxufVxuXG4vLyAtLS0tLS0tLS0tLS0tLS0tLS0gQ29udGVudCAtLS0tLS0tLS0tLS0tLS0tLS0gLy9cblxuLnR3b2hvcC1saW5rcy1ib3gtcHJldmlldyB7XG4gIGZvbnQtc2l6ZTogMC44ZW07XG4gIGNvbG9yOiB2YXIoLS10ZXh0LW11dGVkKTtcbn1cblxuLnR3b2hvcC1saW5rcy1ib3gtdGl0bGUge1xuICBmb250LXdlaWdodDogYm9sZDtcbn1cblxuLnR3b2hvcC1saW5rcy1oZWFkZXIge1xuICBmb250LXNpemU6IDAuOGVtO1xuICBmb250LXdlaWdodDogYm9sZDtcbiAgY3Vyc29yOiBkZWZhdWx0O1xuICB0ZXh0LWRlY29yYXRpb246IG5vbmU7XG59XG4iXSwKICAibWFwcGluZ3MiOiAiO0FBR0E7QUFDRTtBQUNBO0FBQ0E7QUFDQTs7QUFHRjtBQUNFO0FBQ0E7QUFDQTtBQUNBOztBQUlGO0FBQ0U7QUFDQTtBQUNBO0FBRUE7QUFFQTtBQUNBO0FBQ0E7QUFDQTs7QUFHRjtBQUNFOztBQUtGO0FBQ0U7QUFDQTtBQUNBOztBQUVBO0FBQ0U7QUFDQTs7QUFFRjtBQUNFOztBQUVGO0FBQ0U7O0FBTUo7QUFDRTtBQUNBOztBQUdGO0FBQ0U7O0FBR0Y7QUFDRTtBQUNBO0FBQ0E7QUFDQTs7IiwKICAibmFtZXMiOiBbXQp9Cg== */

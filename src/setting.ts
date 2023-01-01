@@ -1,16 +1,18 @@
 import { PluginSettingTab, Setting } from "obsidian";
 
-import type MyPlugin from "./main";
+import type TwohopLink from "./main";
 import type { App } from "obsidian";
 
-export interface MyPluginSettings {
-  mySetting: string;
+export interface TwohopLinkSettings {
+  effectiveExtension: string[];
+  excludesDuplicateLinks: boolean;
+  excludeTag: boolean;
 }
 
 export class SampleSettingTab extends PluginSettingTab {
-  plugin: MyPlugin;
+  plugin: TwohopLink;
 
-  constructor(app: App, plugin: MyPlugin) {
+  constructor(app: App, plugin: TwohopLink) {
     super(app, plugin);
     this.plugin = plugin;
   }
@@ -20,20 +22,42 @@ export class SampleSettingTab extends PluginSettingTab {
 
     containerEl.empty();
 
-    containerEl.createEl("h2", { text: "Settings for my awesome plugin." });
+    new Setting(containerEl)
+      .setName("Excludes duplicates links")
+      .setDesc(
+        "If two or more links have the same 2hop links, merge the link displays into one.",
+      )
+      .addToggle(toggle => {
+        toggle
+          .setValue(this.plugin.settings.excludesDuplicateLinks)
+          .onChange(async value => {
+            this.plugin.settings.excludesDuplicateLinks = value;
+            await this.plugin.saveSettings();
+          });
+      });
 
     new Setting(containerEl)
-      .setName("Setting #1")
-      .setDesc("It's a secret")
-      .addText(text =>
-        text
-          .setPlaceholder("Enter your secret")
-          .setValue(this.plugin.settings.mySetting)
+      .setName("Effective extentions")
+
+      .addText(toggle => {
+        toggle
+          .setValue(this.plugin.settings.effectiveExtension.join(","))
           .onChange(async value => {
-            console.log(`Secret: ${value}`);
-            this.plugin.settings.mySetting = value;
+            this.plugin.settings.effectiveExtension = value.split(",");
             await this.plugin.saveSettings();
-          }),
-      );
+          });
+      });
+
+    const excludeLinkTitle = ["excludeTag"] as const;
+    excludeLinkTitle.forEach(title => {
+      if (typeof this.plugin.settings[title] === "boolean") {
+        new Setting(containerEl).setName(title).addToggle(toggle => {
+          toggle.setValue(this.plugin.settings[title]).onChange(async value => {
+            this.plugin.settings[title] = value;
+            await this.plugin.saveSettings();
+          });
+        });
+      }
+    });
   }
 }

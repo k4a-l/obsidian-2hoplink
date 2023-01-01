@@ -1,0 +1,71 @@
+$gap: 5px;
+
+// ------------------ Container ------------------ //
+.twohop-links-container {
+  display: flex;
+  flex-direction: column;
+  gap: $gap;
+  margin-top: 50px;
+}
+
+.twohop-links-section {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: $gap;
+}
+
+// ------------------ Block ------------------ //
+.twohop-links-box {
+  box-sizing: border-box;
+  width: 135px;
+  height: 45px;
+
+  padding: 5px;
+
+  color: var(--text-normal);
+  cursor: pointer;
+  background-color: var(--background-primary);
+  border: 1px solid var(--background-secondary);
+}
+
+.twohop-links-box:hover {
+  text-decoration: underline;
+}
+
+// ------------------ Header ------------------ //
+
+.twohop-links-box-header {
+  font-size: 0.8em;
+  font-weight: bold;
+  background-color: var(--interactive-accent);
+
+  .twohop-links-twohop-links & {
+    color: var(--text-normal);
+    background-color: var(--background-modifier-border);
+  }
+  .twohop-links-tag-links & {
+    background-color: #ffd8d191;
+  }
+  .twohop-links-new-links & {
+    background-color: var(--interactive-accent);
+  }
+}
+
+// ------------------ Content ------------------ //
+
+.twohop-links-box-preview {
+  font-size: 0.8em;
+  color: var(--text-muted);
+}
+
+.twohop-links-box-title {
+  font-weight: bold;
+}
+
+.twohop-links-header {
+  font-size: 0.8em;
+  font-weight: bold;
+  cursor: default;
+  text-decoration: none;
+}
