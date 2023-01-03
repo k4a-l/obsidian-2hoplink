@@ -26,6 +26,7 @@ export const makeBacklinksMap = ({
       // link毎
       file.links.forEach(link => {
         const currentBackInfo = backLinkMap.get(link);
+        if (link === file.path) return;
         backLinkMap.set(link, {
           path: link,
           displayText: path2Name(link),
@@ -54,9 +55,10 @@ export const makeTwoHopLinks = (
       const f = getLinks(file, forwardLinkMap).filter(isNotBaseFile);
       const b = getLinks(file, backLinkMap).filter(isNotBaseFile);
 
-      const links = [...new Set([...f, ...b])];
+      const links = [...new Set([...f, ...b].filter(it => it !== file))];
 
       if (links.length === 0) return prev;
+
       const current: LinkEntity = {
         path: file,
         displayText: path2Name(file),
@@ -87,7 +89,7 @@ export const getForwardLinks = (
   if (activeFileCache.links) {
     activeFileCache.links.forEach(it => {
       const key = removeBlockReference(it.link);
-      if (!seen.has(key)) {
+      if (!seen.has(key) && it.link !== activeFile.basename) {
         seen.set(key, { path: key, displayText: it.displayText ?? key });
       }
     });
@@ -96,7 +98,7 @@ export const getForwardLinks = (
   if (activeFileCache.embeds) {
     activeFileCache.embeds.forEach(it => {
       const key = removeBlockReference(it.link);
-      if (!seen.has(key)) {
+      if (!seen.has(key) && it.link !== activeFile.basename) {
         seen.set(key, { path: key, displayText: it.displayText ?? key });
       }
     });
