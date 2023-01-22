@@ -14,54 +14,60 @@ export type Props = {
   twohopLinks: TwohopLink;
   tagLinksList: TagLinks[];
   onClick: React.ComponentProps<typeof LinkContainer>["onClick"];
+  getSumbnail: (fileEntity: FileEntity) => string;
 };
 
 export const ReactView = (props: Props) => (
-    <>
+  <>
+    <LinkContainer
+      sourcePath={props.sourcePath}
+      fileEntities={props.forwardResolvedLinks}
+      onClick={props.onClick}
+      title={"Links"}
+      className={"twohop-links-forward-links"}
+      getSumbnail={props.getSumbnail}
+    />
+    <LinkContainer
+      sourcePath={props.sourcePath}
+      fileEntities={props.backwardConnectedLinks}
+      onClick={props.onClick}
+      title={"Backlinks"}
+      className={"twohop-links-back-links"}
+      getSumbnail={props.getSumbnail}
+    />
+    {props.twohopLinks.map(link => (
       <LinkContainer
         sourcePath={props.sourcePath}
-        fileEntities={props.forwardResolvedLinks}
+        key={link.path}
+        fileEntities={link.links}
         onClick={props.onClick}
-        title={"Links"}
-        className={"twohop-links-forward-links"}
+        title={link.displayText}
+        className={"twohop-links-twohop-links"}
+        getSumbnail={props.getSumbnail}
       />
-      <LinkContainer
-        sourcePath={props.sourcePath}
-        fileEntities={props.backwardConnectedLinks}
-        onClick={props.onClick}
-        title={"Backlinks"}
-        className={"twohop-links-back-links"}
-      />
-      {props.twohopLinks.map(link => (
-        <LinkContainer
-          sourcePath={props.sourcePath}
-          key={link.path}
-          fileEntities={link.links.map(l => path2FileEntity(l))}
-          onClick={props.onClick}
-          title={link.displayText}
-          className={"twohop-links-twohop-links"}
-        />
-      ))}
+    ))}
 
-      {props.tagLinksList.map(it => (
-        <LinkContainer
-          sourcePath={props.sourcePath}
-          key={it.tag}
-          fileEntities={it.links.map(l => ({ path: l, displayText: l }))}
-          onClick={props.onClick}
-          title={it.tag}
-          className={"twohop-links-tag-links"}
-        />
-      ))}
+    {props.tagLinksList.map(it => (
       <LinkContainer
         sourcePath={props.sourcePath}
-        fileEntities={props.newLinks}
+        key={it.tag}
+        fileEntities={it.links.map(l => path2FileEntity(l))}
         onClick={props.onClick}
-        title={"NewLinks"}
-        className={"twohop-links-new-links"}
+        title={it.tag}
+        className={"twohop-links-tag-links"}
+        getSumbnail={props.getSumbnail}
       />
-    </>
-  );
+    ))}
+    <LinkContainer
+      sourcePath={props.sourcePath}
+      fileEntities={props.newLinks}
+      onClick={props.onClick}
+      title={"NewLinks"}
+      className={"twohop-links-new-links"}
+      getSumbnail={props.getSumbnail}
+    />
+  </>
+);
 
 export const mountView = (element: Element, props: Props) => {
   //   const root = createRoot(element);

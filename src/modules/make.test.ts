@@ -8,36 +8,51 @@ type MapObject = { [key: string]: ValueInMapRecord };
 const homeCooking: FileEntity = {
   path: "./homeCooking.md",
   displayText: "homeCooking",
+  sumbnailPath: "",
 };
-const diet: FileEntity = { path: "./diet.md", displayText: "diet" };
+const diet: FileEntity = {
+  path: "./diet.md",
+  displayText: "diet",
+  sumbnailPath: "",
+};
 const favoriteFoot: FileEntity = {
   path: "./favoriteFoot.md",
   displayText: "favoriteFoot",
+  sumbnailPath: "",
 };
 const highCalorie: FileEntity = {
   path: "./highCalorie.md",
   displayText: "highCalorie",
+  sumbnailPath: "",
 };
-const ramen: FileEntity = { path: "./Ramen.md", displayText: "Ramen" };
-const sushi: FileEntity = { path: "./Sushi.md", displayText: "Sushi" };
+const ramen: FileEntity = {
+  path: "./Ramen.md",
+  displayText: "Ramen",
+  sumbnailPath: "",
+};
+const sushi: FileEntity = {
+  path: "./Sushi.md",
+  displayText: "Sushi",
+  sumbnailPath: "",
+};
 
 const linkObject: MapObject = {
-  [homeCooking.path]: { ...homeCooking, links: [ramen.path] },
-  [favoriteFoot.path]: { ...favoriteFoot, links: [ramen.path, sushi.path] },
-  [ramen.path]: { ...ramen, links: [highCalorie.path] },
+  [homeCooking.path]: { ...homeCooking, links: [ramen] },
+  [favoriteFoot.path]: { ...favoriteFoot, links: [ramen, sushi] },
+  [ramen.path]: { ...ramen, links: [highCalorie] },
   [sushi.path]: { ...sushi, links: [] },
   [highCalorie.path]: { ...highCalorie, links: [] },
-  [diet.path]: { ...diet, links: [favoriteFoot.path, highCalorie.path] },
+  [diet.path]: { ...diet, links: [favoriteFoot, highCalorie] },
 };
 const fowardLinkMap: LinksMap = new Map(Object.entries(linkObject));
 
 test("make backlink", () => {
   const backLinkObject: MapObject = {
     [homeCooking.path]: { ...homeCooking, links: [] },
-    [favoriteFoot.path]: { ...favoriteFoot, links: [diet.path] },
-    [ramen.path]: { ...ramen, links: [homeCooking.path, favoriteFoot.path] },
-    [sushi.path]: { ...sushi, links: [favoriteFoot.path] },
-    [highCalorie.path]: { ...highCalorie, links: [ramen.path, diet.path] },
+    [favoriteFoot.path]: { ...favoriteFoot, links: [diet] },
+    [ramen.path]: { ...ramen, links: [homeCooking, favoriteFoot] },
+    [sushi.path]: { ...sushi, links: [favoriteFoot] },
+    [highCalorie.path]: { ...highCalorie, links: [ramen, diet] },
     [diet.path]: { ...diet, links: [] },
   };
   const actual: LinksMap = new Map(Object.entries(backLinkObject));
@@ -53,15 +68,19 @@ test("make twohop", () => {
 
   const foward: TwohopLink = [
     {
-      ...{ path: ramen.path, displayText: "Ramen" },
-      links: [highCalorie.path, homeCooking.path],
+      path: ramen.path,
+      displayText: "Ramen",
+      sumbnailPath: "",
+      links: [highCalorie, homeCooking],
     },
   ];
 
   const back: TwohopLink = [
     {
-      ...{ path: diet.path, displayText: "diet" },
-      links: [highCalorie.path],
+      path: diet.path,
+      displayText: "diet",
+      sumbnailPath: "",
+      links: [highCalorie],
     },
   ];
 

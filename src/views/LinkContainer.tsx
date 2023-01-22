@@ -6,11 +6,11 @@ import type { FileEntity } from "../type";
 
 const LinkContainer = (props: {
   sourcePath: string;
-
   fileEntities: FileEntity[];
   onClick: React.ComponentProps<typeof LinkBlock>["onClick"];
   title: string;
   className: string;
+  getSumbnail: (fileEntity: FileEntity) => string;
 }) => {
   if (props.fileEntities.length === 0) return <></>;
   return (
@@ -25,6 +25,7 @@ const LinkContainer = (props: {
           key={it.path}
           onClick={props.onClick}
           sourcePath={props.sourcePath}
+          getSumbnail={props.getSumbnail}
         />
       ))}
     </div>

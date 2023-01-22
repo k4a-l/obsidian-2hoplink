@@ -8,11 +8,7 @@ import {
   makeBacklinksMap,
   makeTwoHopLinks,
 } from "./modules/make";
-import {
-  path2FileEntity,
-  path2Name,
-  removeBlockReference,
-} from "./modules/utils";
+import { path2Name, removeBlockReference } from "./modules/utils";
 import { SampleSettingTab } from "./setting";
 import { mountView } from "./views/ReactView";
 
@@ -92,6 +88,8 @@ export default class TwohopLink extends Plugin {
       toOriginalFowardLinks(this.app.metadataCache.unresolvedLinks),
     );
 
+    console.log(this.app.metadataCache.resolvedLinks);
+
     const backLinks = makeBacklinksMap({
       resolvedLinks: resolvedFowardLinks,
       unresolvedLinks: unresolvedFowardLinks,
@@ -111,11 +109,9 @@ export default class TwohopLink extends Plugin {
     );
 
     const backwardConnectedLinks: FileEntity[] = getLinks(
-      activeFile.path,
+      activeFile,
       backLinks,
-    )
-      .map(link => path2FileEntity(link))
-      .filter(it => isFirst(it.path));
+    ).filter(it => isFirst(it.path));
 
     const resolvedTwoHopLinks = makeTwoHopLinks(
       activeFile.path,
@@ -147,7 +143,7 @@ export default class TwohopLink extends Plugin {
       if (twohopMap.has(link.path)) return;
       twohopMap.set(link.path, {
         ...link,
-        links: link.links.filter(it => isFirst(it)),
+        links: link.links.filter(it => isFirst(it.path)),
       });
     });
 
@@ -161,6 +157,7 @@ export default class TwohopLink extends Plugin {
       tagLinksList,
       newLinks,
       onClick: this.openFile.bind(this),
+      getSumbnail: this.getSumbnail.bind(this),
     });
   }
 
@@ -173,21 +170,26 @@ export default class TwohopLink extends Plugin {
     },
   ) {
     const forwardResolvedLinks = fowardLinks.flatMap(l => {
-      const links = getLinks(activeFile.path, linkMap.resolvedLinks);
+      const links = getLinks(activeFile, linkMap.resolvedLinks);
       const file = this.app.metadataCache.getFirstLinkpathDest(
-        l.path,
+        l.displayText,
         activeFile.path,
       );
-      const link = links.find(it => it === file?.path);
-      return link ? path2FileEntity(link) : [];
+      const link = links.find(it => it.path === file?.path);
+      return link ?? [];
     });
 
     const newLinks = fowardLinks.filter(l => {
-      const links = getLinks(activeFile.path, linkMap.unresolvedLinks);
-      return links.find(it => it === l.path);
+      const links = getLinks(activeFile, linkMap.unresolvedLinks);
+      return links.find(it => it.path === l.path);
     });
 
     return [forwardResolvedLinks, newLinks];
+  }
+
+  private getSumbnail(fileEntity: FileEntity) {
+    if (fileEntity.sumbnailPath === "") return "";
+    return this.app.vault.adapter.getResourcePath(fileEntity.sumbnailPath);
   }
 
   private openFile(
@@ -252,7 +254,10 @@ export default class TwohopLink extends Plugin {
   makeLinkMap(links: LinkEntity[]) {
     const omitIneffectiveExtention = (it: LinkEntity): LinkEntity => {
       const f = it.links.flatMap(f => {
-        const file = this.app.metadataCache.getFirstLinkpathDest(f, it.path);
+        const file = this.app.metadataCache.getFirstLinkpathDest(
+          f.displayText,
+          it.path,
+        );
         if (!file) return f;
         if (
           ["md", ...this.settings.effectiveExtension].contains(file.extension)

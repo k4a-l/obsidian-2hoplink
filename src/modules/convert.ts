@@ -8,5 +8,17 @@ export const toOriginalFowardLinks = (
   Object.entries(links).map(([srcPath, dest]) => ({
     path: srcPath,
     displayText: path2Name(srcPath),
-    links: Object.keys(dest),
+    links: Object.keys(dest).map(path => ({
+      path,
+      displayText: path2Name(path),
+      sumbnailPath: links[path]
+        ? Object.keys(links[path]).find(path =>
+            path.match(/(?<temp1>.jpg|.png|.bmp)$/u),
+          ) ?? ""
+        : "",
+    })),
+    sumbnailPath:
+      Object.keys(dest).find(path =>
+        path.match(/(?<temp1>.jpg|.png|.bmp)$/u),
+      ) ?? "",
   }));

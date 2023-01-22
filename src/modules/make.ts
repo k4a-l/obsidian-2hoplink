@@ -1,4 +1,4 @@
-import { path2Name, removeBlockReference } from "./utils";
+import { removeBlockReference } from "./utils";
 
 import type { FileEntity, LinkEntity, LinksMap, TwohopLink } from "../type";
 import type { TFile, CachedMetadata } from "obsidian";
@@ -25,12 +25,17 @@ export const makeBacklinksMap = ({
 
       // link毎
       file.links.forEach(link => {
-        const currentBackInfo = backLinkMap.get(link);
-        if (link === file.path) return;
-        backLinkMap.set(link, {
-          path: link,
-          displayText: path2Name(link),
-          links: [...(currentBackInfo ? currentBackInfo.links : []), file.path],
+        const currentBackInfo = backLinkMap.get(link.path);
+        if (link.path === file.path) return;
+
+        const { links: _, ...fileEntity } = file;
+
+        backLinkMap.set(link.path, {
+          ...link,
+          links: [
+            ...(currentBackInfo ? currentBackInfo.links : []),
+            fileEntity,
+          ],
         });
       });
     });
@@ -43,37 +48,50 @@ export const makeBacklinksMap = ({
 };
 
 export const makeTwoHopLinks = (
-  currentPath: string,
+  currentFilePath: string,
   forwardLinkMap: LinksMap,
   backLinkMap: LinksMap,
   target: "forward" | "back",
 ): TwohopLink => {
-  const isNotBaseFile = (it: string) => it !== currentPath;
+  const isNotBaseFile = (it: FileEntity) => it.path !== currentFilePath;
 
-  const func = (files: string[]): LinkEntity[] =>
+  const func = (files: FileEntity[]): LinkEntity[] =>
     files.reduce((prev, file): LinkEntity[] => {
       const f = getLinks(file, forwardLinkMap).filter(isNotBaseFile);
       const b = getLinks(file, backLinkMap).filter(isNotBaseFile);
 
-      const links = [...new Set([...f, ...b].filter(it => it !== file))];
+      const linksPath = [
+        ...new Set(
+          [...f.map(it => it.path), ...b.map(it => it.path)].filter(
+            it => it !== file.path,
+          ),
+        ),
+      ];
+      const links = [...f, ...b];
 
       if (links.length === 0) return prev;
 
+      console.log(b);
+
       const current: LinkEntity = {
-        path: file,
-        displayText: path2Name(file),
-        links,
+        ...file,
+        links: linksPath.flatMap(
+          path => links.find(link => link.path === path) ?? [],
+        ),
       };
       return [...prev, current];
     }, [] as LinkEntity[]);
 
   return func(
-    getLinks(currentPath, target === "forward" ? forwardLinkMap : backLinkMap),
+    getLinks(
+      { path: currentFilePath },
+      target === "forward" ? forwardLinkMap : backLinkMap,
+    ),
   );
 };
 
-export const getLinks = (currentFile: string, linkMap: LinksMap): string[] =>
-  linkMap.get(currentFile)?.links ?? [];
+export const getLinks = (file: { path: string }, linkMap: LinksMap) =>
+  linkMap.get(file.path)?.links ?? [];
 
 export const getForwardLinks = (
   activeFile: TFile,
@@ -90,7 +108,11 @@ export const getForwardLinks = (
     activeFileCache.links.forEach(it => {
       const key = removeBlockReference(it.link);
       if (!seen.has(key) && it.link !== activeFile.basename) {
-        seen.set(key, { path: key, displayText: it.displayText ?? key });
+        seen.set(key, {
+          path: key,
+          displayText: it.displayText ?? key,
+          sumbnailPath: "",
+        });
       }
     });
   }
@@ -99,7 +121,11 @@ export const getForwardLinks = (
     activeFileCache.embeds.forEach(it => {
       const key = removeBlockReference(it.link);
       if (!seen.has(key) && it.link !== activeFile.basename) {
-        seen.set(key, { path: key, displayText: it.displayText ?? key });
+        seen.set(key, {
+          path: key,
+          displayText: it.displayText ?? key,
+          sumbnailPath: "",
+        });
       }
     });
   }

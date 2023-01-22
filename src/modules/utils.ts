@@ -9,4 +9,5 @@ export const path2Name = (path: string): string =>
 export const path2FileEntity = (src: string): FileEntity => ({
   path: src,
   displayText: path2Name(src),
+  sumbnailPath: "",
 });

@@ -1,6 +1,10 @@
-export type FileEntity = { path: string; displayText: string };
+export type FileEntity = {
+  path: string;
+  displayText: string;
+  sumbnailPath: string;
+};
 
-export type LinkEntity = FileEntity & { links: string[] };
+export type LinkEntity = FileEntity & { links: FileEntity[] };
 
 export type TwohopLink = LinkEntity[];
 
