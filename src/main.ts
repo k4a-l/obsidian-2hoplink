@@ -147,7 +147,11 @@ export default class TwohopLink extends Plugin {
       });
     });
 
-    const tagLinksList = this.getTagLinksList(activeFile, activeFileCache);
+    const tagLinksList = this.getTagLinksList(
+      activeFile,
+      activeFileCache,
+      resolvedFowardLinks,
+    );
 
     this.injectView({
       sourcePath: activeFile.path,
@@ -223,11 +227,12 @@ export default class TwohopLink extends Plugin {
   getTagLinksList(
     activeFile: TFile,
     activeFileCache: CachedMetadata,
+    forwardLinkMap: LinksMap,
   ): TagLinks[] {
     if (!activeFileCache.tags) return [];
 
     const activeFileTagSet = new Set(activeFileCache.tags.map(it => it.tag));
-    const tagMap: Record<string, string[]> = {};
+    const tagMap: Record<string, FileEntity[]> = {};
     for (const markdownFile of this.app.vault.getMarkdownFiles()) {
       if (markdownFile === activeFile) continue;
 
@@ -240,7 +245,14 @@ export default class TwohopLink extends Plugin {
         if (!tagMap[tag.tag]) {
           tagMap[tag.tag] = [];
         }
-        tagMap[tag.tag].push(path2Name(markdownFile.path));
+
+        tagMap[tag.tag].push(
+          forwardLinkMap.get(markdownFile.path) ?? {
+            path: markdownFile.path,
+            displayText: path2Name(markdownFile.path),
+            sumbnailPath: "",
+          },
+        );
       }
     }
 
@@ -248,6 +260,7 @@ export default class TwohopLink extends Plugin {
     for (const tagMapKey of Object.keys(tagMap)) {
       tagLinksList.push({ tag: tagMapKey, links: tagMap[tagMapKey] });
     }
+    console.log(tagLinksList);
     return tagLinksList;
   }
 

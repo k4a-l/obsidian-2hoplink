@@ -11,4 +11,4 @@ export type TwohopLink = LinkEntity[];
 /** key: path */
 export type LinksMap = Map<string, LinkEntity>;
 
-export type TagLinks = { tag: string; links: string[] };
+export type TagLinks = { tag: string; links: FileEntity[] };

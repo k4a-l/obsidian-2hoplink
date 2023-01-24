@@ -1,6 +1,5 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { path2FileEntity } from "src/modules/utils";
 
 import LinkContainer from "./LinkContainer";
 
@@ -51,7 +50,7 @@ export const ReactView = (props: Props) => (
       <LinkContainer
         sourcePath={props.sourcePath}
         key={it.tag}
-        fileEntities={it.links.map(l => path2FileEntity(l))}
+        fileEntities={it.links}
         onClick={props.onClick}
         title={it.tag}
         className={"twohop-links-tag-links"}
