@@ -8,6 +8,7 @@ const LinkContainer = (props: {
   sourcePath: string;
   fileEntities: FileEntity[];
   onClick: React.ComponentProps<typeof LinkBlock>["onClick"];
+  onBlockTitleClick?: (e: React.MouseEvent) => void;
   title: string;
   className: string;
   getSumbnail: (fileEntity: FileEntity) => string;
@@ -15,7 +16,10 @@ const LinkContainer = (props: {
   if (props.fileEntities.length === 0) return <></>;
   return (
     <div className={`twohop-links-section ${props.className}`}>
-      <div className={"twohop-links-box twohop-links-box-header"}>
+      <div
+        className={"twohop-links-box twohop-links-box-header"}
+        onClick={props.onBlockTitleClick}
+      >
         {props.title}
       </div>
 

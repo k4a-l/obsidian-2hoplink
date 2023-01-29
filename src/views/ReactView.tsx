@@ -40,6 +40,9 @@ export const ReactView = (props: Props) => (
         key={link.path}
         fileEntities={link.links}
         onClick={props.onClick}
+        onBlockTitleClick={(e: React.MouseEvent) =>
+          props.onClick(props.sourcePath, link, e.ctrlKey)
+        }
         title={link.displayText}
         className={"twohop-links-twohop-links"}
         getSumbnail={props.getSumbnail}
