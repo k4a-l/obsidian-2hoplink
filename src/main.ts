@@ -88,8 +88,6 @@ export default class TwohopLink extends Plugin {
       toOriginalFowardLinks(this.app.metadataCache.unresolvedLinks),
     );
 
-    console.log(this.app.metadataCache.resolvedLinks);
-
     const backLinks = makeBacklinksMap({
       resolvedLinks: resolvedFowardLinks,
       unresolvedLinks: unresolvedFowardLinks,
@@ -260,7 +258,6 @@ export default class TwohopLink extends Plugin {
     for (const tagMapKey of Object.keys(tagMap)) {
       tagLinksList.push({ tag: tagMapKey, links: tagMap[tagMapKey] });
     }
-    console.log(tagLinksList);
     return tagLinksList;
   }
 

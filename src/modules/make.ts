@@ -57,6 +57,8 @@ export const makeTwoHopLinks = (
 
   const func = (files: FileEntity[]): LinkEntity[] =>
     files.reduce((prev, file): LinkEntity[] => {
+      if (file.path === currentFilePath) return prev;
+
       const f = getLinks(file, forwardLinkMap).filter(isNotBaseFile);
       const b = getLinks(file, backLinkMap).filter(isNotBaseFile);
 
@@ -70,8 +72,6 @@ export const makeTwoHopLinks = (
       const links = [...f, ...b];
 
       if (links.length === 0) return prev;
-
-      console.log(b);
 
       const current: LinkEntity = {
         ...file,
