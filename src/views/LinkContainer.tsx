@@ -1,10 +1,14 @@
 import * as React from "react";
 
 import LinkBlock from "./LinkBlock";
+import LinkList from "./LinkList";
 
 import type { FileEntity } from "../type";
 
-const LinkContainer = (props: {
+const LinkContainer = ({
+  type = "block",
+  ...props
+}: {
   sourcePath: string;
   fileEntities: FileEntity[];
   onClick: React.ComponentProps<typeof LinkBlock>["onClick"];
@@ -12,26 +16,37 @@ const LinkContainer = (props: {
   title: string;
   className: string;
   getSumbnail: (fileEntity: FileEntity) => string;
+  type?: "block" | "list";
 }) => {
   if (props.fileEntities.length === 0) return <></>;
+
+  const Component = React.useMemo(
+    () => (type === "block" ? LinkBlock : LinkList),
+    [],
+  );
+
   return (
-    <div className={`twohop-links-section ${props.className}`}>
+    <div
+      className={`twohop-links-section ${props.className} twohop-type-${type}`}
+    >
       <div
-        className={"twohop-links-box twohop-links-box-header"}
+        className={"twohop-links-box-header"}
         onClick={props.onBlockTitleClick}
       >
         {props.title}
       </div>
 
-      {props.fileEntities.map(it => (
-        <LinkBlock
-          fileEntity={it}
-          key={it.path}
-          onClick={props.onClick}
-          sourcePath={props.sourcePath}
-          getSumbnail={props.getSumbnail}
-        />
-      ))}
+      <div className={`twohop-links-block-container`}>
+        {props.fileEntities.map(it => (
+          <Component
+            fileEntity={it}
+            key={it.path}
+            onClick={props.onClick}
+            sourcePath={props.sourcePath}
+            getSumbnail={props.getSumbnail}
+          />
+        ))}
+      </div>
     </div>
   );
 };

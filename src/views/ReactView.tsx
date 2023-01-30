@@ -18,14 +18,14 @@ export type Props = {
 
 export const ReactView = (props: Props) => (
   <>
-    <LinkContainer
+    {/* <LinkContainer
       sourcePath={props.sourcePath}
       fileEntities={props.forwardResolvedLinks}
       onClick={props.onClick}
       title={"Links"}
       className={"twohop-links-forward-links"}
       getSumbnail={props.getSumbnail}
-    />
+    /> */}
     <LinkContainer
       sourcePath={props.sourcePath}
       fileEntities={props.backwardConnectedLinks}
@@ -33,6 +33,7 @@ export const ReactView = (props: Props) => (
       title={"Backlinks"}
       className={"twohop-links-back-links"}
       getSumbnail={props.getSumbnail}
+      type={`list`}
     />
     {props.twohopLinks.map(link => (
       <LinkContainer

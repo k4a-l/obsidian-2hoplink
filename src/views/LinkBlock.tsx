@@ -2,7 +2,7 @@ import * as React from "react";
 
 import type { FileEntity } from "../type";
 
-const LinkBlock = (props: {
+export type LinkItemProps = {
   sourcePath: string;
   fileEntity: FileEntity;
   onClick: (
@@ -11,7 +11,9 @@ const LinkBlock = (props: {
     newLeaf: boolean,
   ) => void;
   getSumbnail: (fileEntity: FileEntity) => string;
-}) => {
+};
+
+const LinkBlock = (props: LinkItemProps) => {
   const sumbnail = props.getSumbnail(props.fileEntity);
   return (
     <div
