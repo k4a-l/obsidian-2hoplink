@@ -26,12 +26,28 @@ const DEFAULT_SETTINGS: TwohopLinkSettings = {
 export default class TwohopLink extends Plugin {
   settings: TwohopLinkSettings;
 
+  enable = true;
+
   private eventRefs: EventRef[];
 
   async onload() {
     await this.loadSettings();
 
     this.addSettingTab(new SampleSettingTab(this.app, this));
+
+    this.addCommand({
+      id: "2hoplink-toggle",
+      name: "toggle",
+      callback: () => {
+        if (this.enable) {
+          this.enable = false;
+          this.removeView();
+        } else {
+          this.enable = true;
+          this.render();
+        }
+      },
+    });
 
     this.eventRefs = [
       this.app.workspace.on("file-open", () => {
@@ -56,6 +72,11 @@ export default class TwohopLink extends Plugin {
   }
 
   private render() {
+    if (!this.enable) {
+      this.removeView();
+      return;
+    }
+
     const markdownView = this.app.workspace.getActiveViewOfType(MarkdownView);
     if (markdownView === null) return;
 
