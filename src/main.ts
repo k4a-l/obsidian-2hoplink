@@ -153,7 +153,7 @@ export default class TwohopLink extends Plugin {
 
     this.injectView({
       sourcePath: activeFile.path,
-      forwardResolvedLinks,
+      forwardResolvedLinks: [],
       backwardConnectedLinks,
       twohopLinks: [...twohopMap.values()],
       tagLinksList,
