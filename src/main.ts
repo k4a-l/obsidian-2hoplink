@@ -38,16 +38,10 @@ export default class TwohopLink extends Plugin {
     this.addCommand({
       id: "2hoplink-toggle",
       name: "toggle",
-      callback: () => {
-        if (this.enable) {
-          this.enable = false;
-          this.removeView();
-        } else {
-          this.enable = true;
-          this.render();
-        }
-      },
+      callback: this.toggleView.bind(this),
     });
+
+    this.addRibbonIcon("switch", "toggle 2hoplink", this.toggleView.bind(this));
 
     this.eventRefs = [
       this.app.workspace.on("file-open", () => {
@@ -66,6 +60,16 @@ export default class TwohopLink extends Plugin {
     this.render();
   }
 
+  toggleView() {
+    if (this.enable) {
+      this.enable = false;
+      this.removeView();
+    } else {
+      this.enable = true;
+      this.render();
+    }
+  }
+
   onunload() {
     this.eventRefs.forEach(ref => this.app.metadataCache.offref(ref));
     this.removeView();
@@ -73,7 +77,6 @@ export default class TwohopLink extends Plugin {
 
   private render() {
     if (!this.enable) {
-      this.removeView();
       return;
     }
 
