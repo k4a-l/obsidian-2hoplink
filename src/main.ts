@@ -112,47 +112,52 @@ export default class TwohopLink extends Plugin {
       toOriginalFowardLinks(this.app.metadataCache.unresolvedLinks),
     );
 
-    const backLinks = makeBacklinksMap({
+    const backLinkMap = makeBacklinksMap({
       resolvedLinks: resolvedFowardLinks,
       unresolvedLinks: unresolvedFowardLinks,
     });
 
-    const fowardLinks = getForwardLinks(activeFile, activeFileCache).filter(
+    const fowardLinkMap = getForwardLinks(activeFile, activeFileCache).filter(
       it => isFirst(it.path),
     );
 
     const [forwardResolvedLinks, newLinks] = this.splitByResolve(
       activeFile,
-      fowardLinks,
+      fowardLinkMap,
       {
         resolvedLinks: resolvedFowardLinks,
         unresolvedLinks: unresolvedFowardLinks,
       },
     );
 
-    const backwardConnectedLinks: FileEntity[] = getLinks(
-      activeFile,
-      backLinks,
-    ).filter(it => isFirst(it.path));
+    const backlinks: FileEntity[] = getLinks(activeFile, backLinkMap)
+      .filter(it => isFirst(it.path))
+      .sort((a, b) =>
+        a.displayText < b.displayText
+          ? -1
+          : a.displayText > b.displayText
+          ? 1
+          : 0,
+      );
 
     const resolvedTwoHopLinks = makeTwoHopLinks(
       activeFile.path,
       resolvedFowardLinks,
-      backLinks,
+      backLinkMap,
       "forward",
     );
 
     const unresolvedTwoHopLinks = makeTwoHopLinks(
       activeFile.path,
       unresolvedFowardLinks,
-      backLinks,
+      backLinkMap,
       "forward",
     );
 
     const backTwoHopLinks = makeTwoHopLinks(
       activeFile.path,
       resolvedFowardLinks,
-      backLinks,
+      backLinkMap,
       "back",
     );
 
@@ -169,16 +174,14 @@ export default class TwohopLink extends Plugin {
       });
     });
 
-    const tagLinksList = this.getTagLinksList(
-      activeFile,
-      activeFileCache,
-      resolvedFowardLinks,
-    );
+    const tagLinksList = this.settings.excludeTag
+      ? []
+      : this.getTagLinksList(activeFile, activeFileCache, resolvedFowardLinks);
 
     this.injectView({
       sourcePath: activeFile.path,
       forwardResolvedLinks: [],
-      backwardConnectedLinks,
+      backwardConnectedLinks: backlinks,
       twohopLinks: [...twohopMap.values()],
       tagLinksList,
       newLinks,

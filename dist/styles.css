@@ -2,16 +2,17 @@
 .twohop-links-container {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 30px;
   margin-top: 50px;
 }
-.twohop-links-section {
+.twohop-links-section.twohop-type-block .twohop-links-block-container {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   gap: 5px;
+  padding: 0.5em 0;
 }
-.twohop-links-box {
+.twohop-links-section.twohop-type-block .twohop-links-box {
   box-sizing: border-box;
   width: 135px;
   height: 90px;
@@ -20,38 +21,83 @@
   overflow: auto;
   padding: 5px;
   color: var(--text-normal);
-  cursor: pointer;
   background-color: var(--background-primary);
-  border: 1px solid var(--background-secondary);
+  border: 2px solid var(--background-secondary);
+  border-radius: 0.2em;
+  position: relative;
+}
+.twohop-links-section.twohop-type-block .twohop-links-box-header {
+  font-size: 0.8em;
+  font-weight: bold;
+  color: var(--interactive-accent);
+  border-bottom: 1px solid var(--interactive-accent);
+  width: 100%;
+}
+.twohop-links-section.twohop-type-block .twohop-links-box-header:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+.twohop-links-twohop-links .twohop-links-section.twohop-type-block .twohop-links-box-header {
+  color: var(--text-normal);
+  border-color: 1px solid var(--background-modifier-border);
+}
+.twohop-links-tag-links .twohop-links-section.twohop-type-block .twohop-links-box-header {
+  color: var(ffd8d191);
+  border-color: rgba(255, 216, 209, 0.568627451);
+}
+.twohop-links-new-links .twohop-links-section.twohop-type-block .twohop-links-box-header {
+  color: var(--interactive-accent);
+  border-color: var(--interactive-accent);
+}
+.twohop-links-section.twohop-type-block .twohop-links-box-preview {
+  position: absolute;
+  height: 100%;
+  top: 0;
+}
+.twohop-links-section.twohop-type-block .twohop-links-box-title {
+  position: relative;
+  padding: 0 0.3em;
+  display: inline;
+  border-radius: 0.2em;
+}
+.twohop-links-section.twohop-type-block .twohop-links-has-sumbnail .twohop-links-box-title {
+  background: var(--background-modifier-cover);
+  box-decoration-break: clone;
 }
 .twohop-links-box:hover {
   text-decoration: underline;
+  cursor: pointer;
 }
 .twohop-links-box-header {
   font-size: 0.8em;
   font-weight: bold;
-  background-color: var(--interactive-accent);
-}
-.twohop-links-twohop-links .twohop-links-box-header {
-  color: var(--text-normal);
-  background-color: var(--background-modifier-border);
-}
-.twohop-links-tag-links .twohop-links-box-header {
-  background-color: rgba(255, 216, 209, 0.568627451);
-}
-.twohop-links-new-links .twohop-links-box-header {
-  background-color: var(--interactive-accent);
-}
-.twohop-links-box-preview {
-  font-size: 0.8em;
-  color: var(--text-muted);
-}
-.twohop-links-box-title {
-  font-weight: bold;
-}
-.twohop-links-header {
-  font-size: 0.8em;
-  font-weight: bold;
   cursor: default;
   text-decoration: none;
+}
+.twohop-links-section.twohop-type-list {
+  padding: 1em;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 0.5em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+.twohop-links-section.twohop-type-list .twohop-links-block-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+.twohop-links-section.twohop-type-list .twohop-links-box:not(.twohop-links-box-header) {
+  display: list-item;
+  margin-left: 1em;
+}
+.twohop-links-section.twohop-type-list .twohop-links-box-container {
+  height: 1em;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+.twohop-links-section.twohop-type-list .twohop-links-box-preview {
+  height: 100%;
+  object-fit: cover;
 }
