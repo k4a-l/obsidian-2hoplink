@@ -55,6 +55,11 @@ export const makeTwoHopLinks = (
 ): TwohopLink => {
   const isNotBaseFile = (it: FileEntity) => it.path !== currentFilePath;
 
+  const currentHasFilePaths = [
+    ...getLinks({ path: currentFilePath }, forwardLinkMap),
+    ...getLinks({ path: currentFilePath }, backLinkMap),
+  ].map(it => it.path);
+
   const func = (files: FileEntity[]): LinkEntity[] =>
     files.reduce((prev, file): LinkEntity[] => {
       if (file.path === currentFilePath) return prev;
@@ -75,9 +80,17 @@ export const makeTwoHopLinks = (
 
       const current: LinkEntity = {
         ...file,
-        links: linksPath.flatMap(
-          path => links.find(link => link.path === path) ?? [],
-        ),
+        links: linksPath
+          .flatMap(path => links.find(link => link.path === path) ?? [])
+          // 現在のファイルから直接リンク（フォワード・バック両方）されているものは除く
+          .filter(file => !currentHasFilePaths.includes(file.path))
+          .sort((a, b) =>
+            a.displayText < b.displayText
+              ? -1
+              : a.displayText > b.displayText
+              ? 1
+              : 0,
+          ),
       };
       return [...prev, current];
     }, [] as LinkEntity[]);
