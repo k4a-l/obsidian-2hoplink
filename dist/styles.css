@@ -61,7 +61,8 @@
   border-radius: 0.2em;
 }
 .twohop-links-section.twohop-type-block .twohop-links-has-sumbnail .twohop-links-box-title {
-  background: var(--background-modifier-cover);
+  background: rgba(0, 0, 0, 0.4);
+  color: white;
   box-decoration-break: clone;
 }
 .twohop-links-box:hover {
