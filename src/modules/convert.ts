@@ -13,12 +13,12 @@ export const toOriginalFowardLinks = (
       displayText: path2Name(path),
       sumbnailPath: links[path]
         ? Object.keys(links[path]).find(path =>
-            path.match(/(?<temp1>.jpg|.png|.bmp|.webp)$/u),
+            path.match(/(?<temp1>.jpg|.png|.bmp|.webp|.avif)$/u),
           ) ?? ""
         : "",
     })),
     sumbnailPath:
       Object.keys(dest).find(path =>
-        path.match(/(?<temp1>.jpg|.png|.bmp|.webp)$/u),
+        path.match(/(?<temp1>.jpg|.png|.bmp|.webp|.avif)$/u),
       ) ?? "",
   }));
