@@ -5,6 +5,8 @@ import LinkList from "./LinkList";
 
 import type { FileEntity } from "../type";
 
+const VIEW_COUNT_BASE = 10;
+
 const LinkContainer = ({
   type = "block",
   ...props
@@ -18,6 +20,10 @@ const LinkContainer = ({
   getSumbnail: (fileEntity: FileEntity) => string;
   type?: "block" | "list";
 }) => {
+  const [count, setCount] = React.useState(
+    Math.min(props.fileEntities.length, VIEW_COUNT_BASE),
+  );
+
   if (props.fileEntities.length === 0) return <></>;
 
   const Component = React.useMemo(
@@ -37,7 +43,7 @@ const LinkContainer = ({
       </div>
 
       <div className={`twohop-links-block-container`}>
-        {props.fileEntities.map(it => (
+        {props.fileEntities.slice(0, count).map(it => (
           <Component
             fileEntity={it}
             key={it.path}
@@ -46,6 +52,18 @@ const LinkContainer = ({
             getSumbnail={props.getSumbnail}
           />
         ))}
+        {count < props.fileEntities.length ? (
+          <Component
+            sourcePath={""}
+            fileEntity={{
+              path: "",
+              displayText: "...",
+              sumbnailPath: "",
+            }}
+            onClick={() => setCount(count + VIEW_COUNT_BASE)}
+            getSumbnail={() => ""}
+          />
+        ) : null}
       </div>
     </div>
   );
