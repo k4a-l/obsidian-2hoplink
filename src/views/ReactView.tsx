@@ -1,5 +1,5 @@
 import * as React from "react";
-import * as ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 
 import LinkContainer from "./LinkContainer";
 
@@ -72,18 +72,13 @@ export const ReactView = (props: Props) => (
   </>
 );
 
+// TODO:  You are calling ReactDOMClient.createRoot() on a container that has already been passed to createRoot() before. Instead, call root.render() on the existing root instead if you want to update it.
+// 問題の解消
 export const mountView = (element: Element, props: Props) => {
-  //   const root = createRoot(element);
-  //   root.render(
-  //     <React.StrictMode>
-  //       <ReactView {...props} />
-  //     </React.StrictMode>,
-  //   );
-
-  ReactDOM.render(
+  const root = createRoot(element);
+  root.render(
     <React.StrictMode>
       <ReactView {...props} />
     </React.StrictMode>,
-    element,
   );
 };
