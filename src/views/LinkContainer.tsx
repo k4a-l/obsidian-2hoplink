@@ -21,7 +21,12 @@ const LinkContainer = ({
   type?: "block" | "list";
 }) => {
   const [count, setCount] = React.useState(
-    Math.min(props.fileEntities.length, VIEW_COUNT_BASE),
+    Math.min(
+      props.fileEntities.length,
+      props.className.includes("back")
+        ? props.fileEntities.length
+        : VIEW_COUNT_BASE,
+    ),
   );
 
   if (props.fileEntities.length === 0) return <></>;
