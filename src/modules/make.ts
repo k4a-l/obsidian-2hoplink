@@ -23,6 +23,8 @@ export const makeBacklinksMap = ({
         currentBackInfo ? currentBackInfo : { ...file, links: [] },
       );
 
+      if (file.path.match(/\d{4}-\d{2}-\d{2}\.md$/u)) return;
+
       // link毎
       file.links.forEach(link => {
         const currentBackInfo = backLinkMap.get(link.path);

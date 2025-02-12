@@ -60,14 +60,14 @@ const PROD_CONDIG = {
 const DEV_CONDIG = {
   watch: true,
   sourcemap: "inline",
-  outdir: "./test-vault/.obsidian/plugins/obsidian-2hoplink/",
+  outdir: ".",
   plugins: [
     sassPlugin(),
     copy({
       resolveFrom: "cwd",
       assets: {
         from: ["./assets/*"],
-        to: ["./test-vault/.obsidian/plugins/obsidian-2hoplink"],
+        to: ["./"],
       },
     }),
   ],
