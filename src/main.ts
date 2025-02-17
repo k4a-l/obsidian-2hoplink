@@ -162,18 +162,18 @@ export default class TwohopLink extends Plugin {
       "forward",
     );
 
-    const backTwoHopLinks = makeTwoHopLinks(
-      activeFile.path,
-      resolvedFowardLinks,
-      backLinkMap,
-      "back",
-    );
+    // const backTwoHopLinks = makeTwoHopLinks(
+    //   activeFile.path,
+    //   resolvedFowardLinks,
+    //   backLinkMap,
+    //   "back",
+    // );
 
     const twohopMap = new Map<string, LinkEntity>();
     [
       ...resolvedTwoHopLinks,
       ...unresolvedTwoHopLinks,
-      ...backTwoHopLinks,
+      //   ...backTwoHopLinks,
     ].forEach(link => {
       if (twohopMap.has(link.path)) return;
       twohopMap.set(link.path, {

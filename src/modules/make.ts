@@ -59,24 +59,28 @@ export const makeTwoHopLinks = (
 
   const currentHasFilePaths = [
     ...getLinks({ path: currentFilePath }, forwardLinkMap),
-    ...getLinks({ path: currentFilePath }, backLinkMap),
+    // ...getLinks({ path: currentFilePath }, backLinkMap),
   ].map(it => it.path);
 
   const func = (files: FileEntity[]): LinkEntity[] =>
     files.reduce((prev, file): LinkEntity[] => {
       if (file.path === currentFilePath) return prev;
 
-      const f = getLinks(file, forwardLinkMap).filter(isNotBaseFile);
+      //   const f = getLinks(file, forwardLinkMap).filter(isNotBaseFile);
       const b = getLinks(file, backLinkMap).filter(isNotBaseFile);
 
       const linksPath = [
         ...new Set(
-          [...f.map(it => it.path), ...b.map(it => it.path)].filter(
-            it => it !== file.path,
-          ),
+          [
+            // ...f.map(it => it.path),
+            ...b.map(it => it.path),
+          ].filter(it => it !== file.path),
         ),
       ];
-      const links = [...f, ...b];
+      const links = [
+        // ...f,
+        ...b,
+      ];
 
       if (links.length === 0) return prev;
 
