@@ -130,16 +130,16 @@ export default class TwohopLink extends Plugin {
       },
     );
 
-    const forwardLinkMapRealPath = fowardLinkMap.map(it =>
-      this.app.metadataCache.getFirstLinkpathDest(it.path, activeFile.path),
-    );
+    // const forwardLinkMapRealPath = fowardLinkMap.map(it =>
+    //   this.app.metadataCache.getFirstLinkpathDest(it.path, activeFile.path),
+    // );
 
     const backlinks: FileEntity[] = getLinks(activeFile, backLinkMap)
       .filter(it => isFirst(it.path))
       // fowardLinkにあるものは除外
-      .filter(
-        it => !forwardLinkMapRealPath.find(link => link?.path === it.path),
-      )
+      //   .filter(
+      //     it => !forwardLinkMapRealPath.find(link => link?.path === it.path),
+      //   )
       .sort((a, b) =>
         a.displayText < b.displayText
           ? -1
