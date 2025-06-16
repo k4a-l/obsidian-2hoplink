@@ -106,10 +106,14 @@ export default class TwohopLink extends Plugin {
     };
 
     const resolvedFowardLinks = this.makeLinkMap(
-      toOriginalFowardLinks(this.app.metadataCache.resolvedLinks),
+      toOriginalFowardLinks(this.app.metadataCache.resolvedLinks, link =>
+        this.app.metadataCache.getCache(link),
+      ),
     );
     const unresolvedFowardLinks = this.makeLinkMap(
-      toOriginalFowardLinks(this.app.metadataCache.unresolvedLinks),
+      toOriginalFowardLinks(this.app.metadataCache.unresolvedLinks, link =>
+        this.app.metadataCache.getCache(link),
+      ),
     );
 
     const backLinkMap = makeBacklinksMap({
@@ -298,7 +302,7 @@ export default class TwohopLink extends Plugin {
 
   makeLinkMap(links: LinkEntity[]) {
     const omitIneffectiveExtention = (it: LinkEntity): LinkEntity => {
-      const f = it.links.flatMap(f => {
+      const createdLinks = it.links.flatMap(f => {
         const file = this.app.metadataCache.getFirstLinkpathDest(
           f.displayText,
           it.path,
@@ -310,7 +314,7 @@ export default class TwohopLink extends Plugin {
           return f;
         return [];
       });
-      return { ...it, links: f };
+      return { ...it, links: createdLinks };
     };
     return new Map(
       links
