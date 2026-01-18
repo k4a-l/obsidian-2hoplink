@@ -1,7 +1,7 @@
-import { removeBlockReference } from "./utils";
+import type { CachedMetadata, TFile } from "obsidian";
 
 import type { FileEntity, LinkEntity, LinksMap, TwohopLink } from "../type";
-import type { TFile, CachedMetadata } from "obsidian";
+import { removeBlockReference } from "./utils";
 
 type LinkMaps = {
   resolvedLinks?: LinksMap;
@@ -15,7 +15,7 @@ export const makeBacklinksMap = ({
   const backLinkMap: LinksMap = new Map();
 
   const func = (map: LinksMap) => {
-    map.forEach(file => {
+    map.forEach((file) => {
       // Initialize(backlinkがない場合に作成されないため)
       const currentBackInfo = backLinkMap.get(file.path);
       backLinkMap.set(
@@ -23,9 +23,8 @@ export const makeBacklinksMap = ({
         currentBackInfo ? currentBackInfo : { ...file, links: [] },
       );
 
-
       // link毎
-      file.links.forEach(link => {
+      file.links.forEach((link) => {
         const currentBackInfo = backLinkMap.get(link.path);
         if (link.path === file.path) return;
 
@@ -59,7 +58,7 @@ export const makeTwoHopLinks = (
   const currentHasFilePaths = [
     ...getLinks({ path: currentFilePath }, forwardLinkMap),
     // ...getLinks({ path: currentFilePath }, backLinkMap),
-  ].map(it => it.path);
+  ].map((it) => it.path);
 
   const func = (files: FileEntity[]): LinkEntity[] =>
     files.reduce((prev, file): LinkEntity[] => {
@@ -72,8 +71,8 @@ export const makeTwoHopLinks = (
         ...new Set(
           [
             // ...f.map(it => it.path),
-            ...b.map(it => it.path),
-          ].filter(it => it !== file.path),
+            ...b.map((it) => it.path),
+          ].filter((it) => it !== file.path),
         ),
       ];
       const links = [
@@ -86,17 +85,18 @@ export const makeTwoHopLinks = (
       const current: LinkEntity = {
         ...file,
         links: linksPath
-          .flatMap(path => links.find(link => link.path === path) ?? [])
+          .flatMap((path) => links.find((link) => link.path === path) ?? [])
           // 現在のファイルから直接リンク（フォワード・バック両方）されているものは除く
-          .filter(file => !currentHasFilePaths.includes(file.path))
+          .filter((file) => !currentHasFilePaths.includes(file.path))
           .sort((a, b) =>
             a.displayText < b.displayText
               ? -1
               : a.displayText > b.displayText
-              ? 1
-              : 0,
+                ? 1
+                : 0,
           ),
       };
+      // biome-ignore lint/performance/noAccumulatingSpread: とりあえず
       return [...prev, current];
     }, [] as LinkEntity[]);
 
@@ -123,7 +123,7 @@ export const getForwardLinks = (
   const seen = new Map<string, FileEntity>();
 
   if (activeFileCache.links) {
-    activeFileCache.links.forEach(it => {
+    activeFileCache.links.forEach((it) => {
       const key = removeBlockReference(it.link);
       if (!seen.has(key) && it.link !== activeFile.basename) {
         seen.set(key, {
@@ -136,7 +136,7 @@ export const getForwardLinks = (
   }
 
   if (activeFileCache.embeds) {
-    activeFileCache.embeds.forEach(it => {
+    activeFileCache.embeds.forEach((it) => {
       const key = removeBlockReference(it.link);
       if (!seen.has(key) && it.link !== activeFile.basename) {
         seen.set(key, {

@@ -1,8 +1,8 @@
+import { expect, test } from "vitest";
+import type { FileEntity, LinksMap, TwohopLink } from "../type";
 import { makeBacklinksMap, makeTwoHopLinks } from "./make";
 
-import type { FileEntity, LinksMap, TwohopLink } from "../type";
-
-type ValueInMapRecord = LinksMap extends Map<any, infer I> ? I : never;
+type ValueInMapRecord = LinksMap extends Map<string, infer I> ? I : never;
 type MapObject = { [key: string]: ValueInMapRecord };
 
 const homeCooking: FileEntity = {
@@ -93,7 +93,7 @@ test("make twohop", () => {
   ).toStrictEqual(back);
 });
 
-const printMap = (map: Map<any, any>) => printObject([...map]);
+// const printMap = (map: Map<any, any>) => printObject([...map]);
 
-const printObject = (object: Object) =>
+const printObject = (object: unknown) =>
   console.log(JSON.stringify(object, null, 4));

@@ -1,10 +1,7 @@
 {
   "obsidian-2hoplink:2hoplink-toggle": [
     {
-      "modifiers": [
-        "Mod",
-        "Shift"
-      ],
+      "modifiers": ["Mod", "Shift"],
       "key": "Key255"
     }
   ]

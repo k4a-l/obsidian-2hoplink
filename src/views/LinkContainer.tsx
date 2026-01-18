@@ -1,9 +1,7 @@
 import * as React from "react";
-
+import type { FileEntity } from "../type";
 import LinkBlock from "./LinkBlock";
 import LinkList from "./LinkList";
-
-import type { FileEntity } from "../type";
 
 const VIEW_COUNT_BASE = 10;
 
@@ -52,7 +50,7 @@ const LinkContainer = ({
       </div>
 
       <div className={`twohop-links-block-container`}>
-        {props.fileEntities.slice(0, count).map(it => (
+        {props.fileEntities.slice(0, count).map((it) => (
           <Component
             fileEntity={it}
             key={it.path}

@@ -1,9 +1,7 @@
 import * as React from "react";
 import { createRoot, type Root } from "react-dom/client";
-
-import LinkContainer from "./LinkContainer";
-
 import type { FileEntity, TagLinks, TwohopLink } from "../type";
+import LinkContainer from "./LinkContainer";
 
 export type Props = {
   sourcePath: string;
@@ -35,7 +33,7 @@ export const ReactView = (props: Props) => (
       getSumbnail={props.getSumbnail}
       type={`list`}
     />
-    {props.twohopLinks.map(link => (
+    {props.twohopLinks.map((link) => (
       <LinkContainer
         sourcePath={props.sourcePath}
         key={link.path}
@@ -50,7 +48,7 @@ export const ReactView = (props: Props) => (
       />
     ))}
 
-    {props.tagLinksList.map(it => (
+    {props.tagLinksList.map((it) => (
       <LinkContainer
         sourcePath={props.sourcePath}
         key={it.tag}
@@ -74,8 +72,6 @@ export const ReactView = (props: Props) => (
 
 // TODO:  You are calling ReactDOMClient.createRoot() on a container that has already been passed to createRoot() before. Instead, call root.render() on the existing root instead if you want to update it.
 // 問題の解消
-
-
 
 const roots = new WeakMap<Element, Root>();
 

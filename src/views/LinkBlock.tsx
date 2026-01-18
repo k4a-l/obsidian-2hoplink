@@ -28,7 +28,7 @@ const LinkBlock = (props: LinkItemProps) => {
         <img
           className="twohop-links-box-preview"
           src={props.getSumbnail(props.fileEntity)}
-          alt={"preview image"}
+          alt={"preview"}
         />
       )}
       <div className="twohop-links-box-title">

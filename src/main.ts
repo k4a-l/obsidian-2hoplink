@@ -1,5 +1,5 @@
+import type { CachedMetadata, EventRef, TFile } from "obsidian";
 import { MarkdownView, Plugin } from "obsidian";
-
 import { toOriginalFowardLinks } from "./modules/convert";
 import { getTargetElement } from "./modules/htmlElement";
 import {
@@ -9,13 +9,11 @@ import {
   makeTwoHopLinks,
 } from "./modules/make";
 import { isDailyNote, path2Name, removeBlockReference } from "./modules/utils";
-import { SampleSettingTab } from "./setting";
-import { mountView, unmountView } from "./views/ReactView";
-
 import type { TwohopLinkSettings } from "./setting";
+import { SampleSettingTab } from "./setting";
 import type { FileEntity, LinkEntity, LinksMap, TagLinks } from "./type";
 import type { Props } from "./views/ReactView";
-import type { CachedMetadata, EventRef, TFile } from "obsidian";
+import { mountView, unmountView } from "./views/ReactView";
 
 const DEFAULT_SETTINGS: TwohopLinkSettings = {
   excludesDuplicateLinks: true,
@@ -47,7 +45,7 @@ export default class TwohopLink extends Plugin {
       this.app.workspace.on("file-open", () => {
         this.render();
       }),
-      this.app.metadataCache.on("resolve", file => {
+      this.app.metadataCache.on("resolve", (file) => {
         const activeFile = this.app.workspace.getActiveFile();
         if (activeFile !== null) {
           if (file.path === activeFile.path) {
@@ -71,7 +69,9 @@ export default class TwohopLink extends Plugin {
   }
 
   onunload() {
-    this.eventRefs.forEach(ref => this.app.metadataCache.offref(ref));
+    this.eventRefs.forEach((ref) => {
+      this.app.metadataCache.offref(ref);
+    });
     this.removeView();
   }
 
@@ -106,12 +106,12 @@ export default class TwohopLink extends Plugin {
     };
 
     const resolvedFowardLinks = this.makeLinkMap(
-      toOriginalFowardLinks(this.app.metadataCache.resolvedLinks, link =>
+      toOriginalFowardLinks(this.app.metadataCache.resolvedLinks, (link) =>
         this.app.metadataCache.getCache(link),
       ),
     );
     const unresolvedFowardLinks = this.makeLinkMap(
-      toOriginalFowardLinks(this.app.metadataCache.unresolvedLinks, link =>
+      toOriginalFowardLinks(this.app.metadataCache.unresolvedLinks, (link) =>
         this.app.metadataCache.getCache(link),
       ),
     );
@@ -122,7 +122,7 @@ export default class TwohopLink extends Plugin {
     });
 
     const fowardLinkMap = getForwardLinks(activeFile, activeFileCache).filter(
-      it => isFirst(it.path),
+      (it) => isFirst(it.path),
     );
 
     const [forwardResolvedLinks, newLinks] = this.splitByResolve(
@@ -139,7 +139,7 @@ export default class TwohopLink extends Plugin {
     // );
 
     const backlinks: FileEntity[] = getLinks(activeFile, backLinkMap)
-      .filter(it => isFirst(it.path))
+      .filter((it) => isFirst(it.path))
       // fowardLinkにあるものは除外
       //   .filter(
       //     it => !forwardLinkMapRealPath.find(link => link?.path === it.path),
@@ -148,8 +148,8 @@ export default class TwohopLink extends Plugin {
         a.displayText < b.displayText
           ? -1
           : a.displayText > b.displayText
-          ? 1
-          : 0,
+            ? 1
+            : 0,
       );
 
     const resolvedTwoHopLinks = makeTwoHopLinks(
@@ -178,13 +178,13 @@ export default class TwohopLink extends Plugin {
       ...resolvedTwoHopLinks,
       ...unresolvedTwoHopLinks,
       //   ...backTwoHopLinks,
-    ].forEach(link => {
+    ].forEach((link) => {
       if (twohopMap.has(link.path)) return;
       twohopMap.set(link.path, {
         ...link,
         links: link.links
-          .filter(it => isFirst(it.path))
-          .filter(it => !isDailyNote(it.path)),
+          .filter((it) => isFirst(it.path))
+          .filter((it) => !isDailyNote(it.path)),
       });
     });
 
@@ -212,19 +212,19 @@ export default class TwohopLink extends Plugin {
       unresolvedLinks: LinksMap;
     },
   ) {
-    const forwardResolvedLinks = fowardLinks.flatMap(l => {
+    const forwardResolvedLinks = fowardLinks.flatMap((l) => {
       const links = getLinks(activeFile, linkMap.resolvedLinks);
       const file = this.app.metadataCache.getFirstLinkpathDest(
         l.displayText,
         activeFile.path,
       );
-      const link = links.find(it => it.path === file?.path);
+      const link = links.find((it) => it.path === file?.path);
       return link ?? [];
     });
 
-    const newLinks = fowardLinks.filter(l => {
+    const newLinks = fowardLinks.filter((l) => {
       const links = getLinks(activeFile, linkMap.unresolvedLinks);
-      return links.find(it => it.path === l.path);
+      return links.find((it) => it.path === l.path);
     });
 
     return [forwardResolvedLinks, newLinks];
@@ -278,7 +278,7 @@ export default class TwohopLink extends Plugin {
   ): TagLinks[] {
     if (!activeFileCache.tags) return [];
 
-    const activeFileTagSet = new Set(activeFileCache.tags.map(it => it.tag));
+    const activeFileTagSet = new Set(activeFileCache.tags.map((it) => it.tag));
     const tagMap: Record<string, FileEntity[]> = {};
     for (const markdownFile of this.app.vault.getMarkdownFiles()) {
       if (markdownFile === activeFile) continue;
@@ -286,7 +286,7 @@ export default class TwohopLink extends Plugin {
       const cachedMetadata = this.app.metadataCache.getFileCache(markdownFile);
       if (!cachedMetadata?.tags) continue;
 
-      for (const tag of cachedMetadata.tags.filter(it =>
+      for (const tag of cachedMetadata.tags.filter((it) =>
         activeFileTagSet.has(it.tag),
       )) {
         if (!tagMap[tag.tag]) {
@@ -312,7 +312,7 @@ export default class TwohopLink extends Plugin {
 
   makeLinkMap(links: LinkEntity[]) {
     const omitIneffectiveExtention = (it: LinkEntity): LinkEntity => {
-      const createdLinks = it.links.flatMap(f => {
+      const createdLinks = it.links.flatMap((f) => {
         const file = this.app.metadataCache.getFirstLinkpathDest(
           f.displayText,
           it.path,
@@ -347,7 +347,7 @@ export default class TwohopLink extends Plugin {
     const markdownViews = this.app.workspace.getLeavesOfType("markdown");
     for (const markdownView of markdownViews) {
       for (const element of getTargetElement(
-        // @ts-ignore
+        // @ts-expect-error
         markdownView.containerEl,
       )) {
         if (element) {

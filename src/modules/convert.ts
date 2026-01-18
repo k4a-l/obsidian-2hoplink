@@ -1,7 +1,6 @@
-import { path2Name } from "./utils";
-
 import type { CachedMetadata } from "obsidian";
 import type { LinkEntity } from "src/type";
+import { path2Name } from "./utils";
 
 export const toOriginalFowardLinks = (
   links: Record<string, Record<string, number>>,
@@ -12,19 +11,20 @@ export const toOriginalFowardLinks = (
     return {
       path: srcPath,
       displayText: path2Name(srcPath),
-      links: Object.keys(dest).map(path => ({
+      links: Object.keys(dest).map((path) => ({
         path,
         displayText: path2Name(path),
         sumbnailPath: links[path]
-          ? Object.keys(links[path]).find(path =>
+          ? (Object.keys(links[path]).find((path) =>
               path.match(/(?<temp1>.jpg|.png|.bmp|.webp|.avif)$/u),
-            ) ?? ""
+            ) ?? "")
           : "",
       })),
       sumbnailPath:
         fileCache?.embeds
-          ?.map(l => l.link)
-          .find(path => path.match(/(?<temp1>.jpg|.png|.bmp|.webp|.avif)$/u)) ??
-        "",
+          ?.map((l) => l.link)
+          .find((path) =>
+            path.match(/(?<temp1>.jpg|.png|.bmp|.webp|.avif)$/u),
+          ) ?? "",
     };
   });
