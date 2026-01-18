@@ -2,7 +2,7 @@ const CONTAINER_CLASS = "twohop-links-container";
 
 export const getTargetElement = (containerEl: HTMLElement): Element[] => {
   const elements = containerEl.querySelectorAll(
-    `div:not(.markdown-embed-content) > .markdown-source-view .cm-sizer`,
+    `div.view-content:not(.markdown-embed-content) > .markdown-source-view .cm-sizer`,
   );
 
   const containers: Element[] = [];
