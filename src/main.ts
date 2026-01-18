@@ -8,7 +8,7 @@ import {
   makeBacklinksMap,
   makeTwoHopLinks,
 } from "./modules/make";
-import { path2Name, removeBlockReference } from "./modules/utils";
+import { isDailyNote, path2Name, removeBlockReference } from "./modules/utils";
 import { SampleSettingTab } from "./setting";
 import { mountView } from "./views/ReactView";
 
@@ -182,7 +182,9 @@ export default class TwohopLink extends Plugin {
       if (twohopMap.has(link.path)) return;
       twohopMap.set(link.path, {
         ...link,
-        links: link.links.filter(it => isFirst(it.path)),
+        links: link.links
+          .filter(it => isFirst(it.path))
+          .filter(it => !isDailyNote(it.path)),
       });
     });
 
