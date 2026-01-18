@@ -29,6 +29,10 @@ const LinkContainer = ({
     ),
   );
 
+  React.useEffect(() => {
+    setCount(props.fileEntities.length);
+  }, [props.fileEntities.length]);
+
   const Component = React.useMemo(
     () => (type === "block" ? LinkBlock : LinkList),
     [type],

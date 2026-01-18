@@ -232,7 +232,15 @@ export default class TwohopLink extends Plugin {
 
   private getSumbnail(fileEntity: FileEntity) {
     if (fileEntity.sumbnailPath === "") return "";
-    return this.app.vault.adapter.getResourcePath(fileEntity.sumbnailPath);
+
+    const file = this.app.metadataCache.getFirstLinkpathDest(
+      fileEntity.sumbnailPath,
+      fileEntity.path,
+    );
+
+    return this.app.vault.adapter.getResourcePath(
+      file ? file.path : fileEntity.sumbnailPath,
+    );
   }
 
   private openFile(
