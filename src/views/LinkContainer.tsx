@@ -29,12 +29,12 @@ const LinkContainer = ({
     ),
   );
 
-  if (props.fileEntities.length === 0) return <></>;
-
   const Component = React.useMemo(
     () => (type === "block" ? LinkBlock : LinkList),
-    [],
+    [type],
   );
+
+  if (props.fileEntities.length === 0) return <></>;
 
   return (
     <div

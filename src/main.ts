@@ -10,7 +10,7 @@ import {
 } from "./modules/make";
 import { isDailyNote, path2Name, removeBlockReference } from "./modules/utils";
 import { SampleSettingTab } from "./setting";
-import { mountView } from "./views/ReactView";
+import { mountView, unmountView } from "./views/ReactView";
 
 import type { TwohopLinkSettings } from "./setting";
 import type { FileEntity, LinkEntity, LinksMap, TagLinks } from "./type";
@@ -343,6 +343,7 @@ export default class TwohopLink extends Plugin {
         markdownView.containerEl,
       )) {
         if (element) {
+          unmountView(element);
           element.remove();
         }
       }
