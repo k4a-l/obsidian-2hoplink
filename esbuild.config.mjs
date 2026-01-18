@@ -38,26 +38,26 @@ const BASE_CONFIG = {
   treeShaking: true,
 };
 
-/** @type {import('esbuild').BuildOptions} */
-const PROD_CONDIG = {
-  watch: false,
-  sourcemap: false,
-  outdir: "dist",
-  plugins: [
-    sassPlugin(),
-    copy({
-      resolveFrom: "cwd",
-      assets: {
-        from: ["./assets/*"],
-        to: ["./dist"],
-      },
-    }),
-  ],
-};
+// /** @type {import('esbuild').BuildOptions} */
+// const PROD_CONDIG = {
+//   //   watch: false,
+//   sourcemap: false,
+//   outdir: "dist",
+//   plugins: [
+//     sassPlugin(),
+//     copy({
+//       resolveFrom: "cwd",
+//       assets: {
+//         from: ["./assets/*"],
+//         to: ["./dist"],
+//       },
+//     }),
+//   ],
+// };
 
 /** @type {import('esbuild').BuildOptions} */
 const DEV_CONDIG = {
-  watch: true,
+  //   watch: true,
   sourcemap: "inline",
   outdir: ".",
   plugins: [
@@ -74,9 +74,29 @@ const DEV_CONDIG = {
 
 const prod = process.argv[2] === "production";
 
-esbuild
-  .build({
-    ...BASE_CONFIG,
-    ...(prod ? PROD_CONDIG : DEV_CONDIG),
-  })
-  .catch(() => process.exit(1));
+// esbuild
+//   .build({
+//     ...BASE_CONFIG,
+//     ...DEV_CONDIG,
+//     // ...(prod ? PROD_CONDIG : DEV_CONDIG),
+//   })
+//   .catch(() => process.exit(1));
+
+const buildOptions = {
+  ...BASE_CONFIG,
+  ...DEV_CONDIG,
+};
+
+if (prod) {
+  // Production build
+  esbuild.build(buildOptions).catch(() => process.exit(1));
+} else {
+  // Development build with watch
+  esbuild
+    .context(buildOptions)
+    .then((ctx) => {
+      console.log("Watching for changes...");
+      return ctx.watch();
+    })
+    .catch(() => process.exit(1));
+}

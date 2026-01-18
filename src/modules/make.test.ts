@@ -1,4 +1,4 @@
-import { expect, test } from "vitest";
+import { describe, expect, test } from "vitest";
 import type { FileEntity, LinksMap, TwohopLink } from "../type";
 import { makeBacklinksMap, makeTwoHopLinks } from "./make";
 
@@ -61,7 +61,7 @@ test("make backlink", () => {
   expect(recieved).toStrictEqual(actual);
 });
 
-test("make twohop", () => {
+describe("make twohop", () => {
   const backlinkMap = makeBacklinksMap({ resolvedLinks: fowardLinkMap });
 
   const currentFile = linkObject[favoriteFoot.path];
@@ -84,13 +84,19 @@ test("make twohop", () => {
     },
   ];
 
-  expect(
-    makeTwoHopLinks(currentFile.path, fowardLinkMap, backlinkMap, "forward"),
-  ).toStrictEqual(foward);
+  console.log(backlinkMap.get(favoriteFoot.path));
 
-  expect(
-    makeTwoHopLinks(currentFile.path, fowardLinkMap, backlinkMap, "back"),
-  ).toStrictEqual(back);
+  test("forward", () => {
+    expect(
+      makeTwoHopLinks(currentFile.path, fowardLinkMap, backlinkMap, "forward"),
+    ).toStrictEqual(foward);
+  });
+
+  test("back", () => {
+    expect(
+      makeTwoHopLinks(currentFile.path, fowardLinkMap, backlinkMap, "back"),
+    ).toStrictEqual(back);
+  });
 });
 
 // const printMap = (map: Map<any, any>) => printObject([...map]);
