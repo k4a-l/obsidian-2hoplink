@@ -1,5 +1,5 @@
 import type { CachedMetadata, EventRef, TFile } from "obsidian";
-import { MarkdownView, Plugin } from "obsidian";
+import { debounce, MarkdownView, Plugin } from "obsidian";
 import { toOriginalFowardLinks } from "./modules/convert";
 import { getTargetElement } from "./modules/htmlElement";
 import {
@@ -28,6 +28,8 @@ export default class TwohopLink extends Plugin {
 
   private eventRefs: EventRef[];
 
+  private debouncedRender = debounce(this.render.bind(this), 100, true);
+
   async onload() {
     await this.loadSettings();
 
@@ -43,14 +45,13 @@ export default class TwohopLink extends Plugin {
 
     this.eventRefs = [
       this.app.workspace.on("file-open", () => {
-        this.render();
+        if (this.enable) {
+          this.render();
+        }
       }),
       this.app.metadataCache.on("resolve", (file) => {
-        const activeFile = this.app.workspace.getActiveFile();
-        if (activeFile !== null) {
-          if (file.path === activeFile.path) {
-            this.render();
-          }
+        if (this.app.workspace.getActiveFile() && this.enable) {
+          this.debouncedRender();
         }
       }),
     ];
@@ -140,10 +141,6 @@ export default class TwohopLink extends Plugin {
 
     const backlinks: FileEntity[] = getLinks(activeFile, backLinkMap)
       .filter((it) => isFirst(it.path))
-      // fowardLinkにあるものは除外
-      //   .filter(
-      //     it => !forwardLinkMapRealPath.find(link => link?.path === it.path),
-      //   )
       .sort((a, b) =>
         a.displayText < b.displayText
           ? -1
@@ -194,7 +191,11 @@ export default class TwohopLink extends Plugin {
 
     this.injectView({
       sourcePath: activeFile.path,
-      forwardResolvedLinks: [],
+      forwardResolvedLinks: forwardResolvedLinks.filter(
+        (it) =>
+          // backLinkにあるものは除外
+          !backlinks.find((link) => link?.path === it.path),
+      ),
       backwardConnectedLinks: backlinks,
       twohopLinks: [...twohopMap.values()],
       tagLinksList,

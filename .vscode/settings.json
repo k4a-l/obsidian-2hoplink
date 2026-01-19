@@ -28,5 +28,8 @@
   "typescript.tsdk": "node_modules\\typescript\\lib",
   "[css]": {
     "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[scss]": {
+    "editor.defaultFormatter": "vscode.css-language-features"
   }
 }

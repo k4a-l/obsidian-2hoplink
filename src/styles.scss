@@ -1,134 +1,330 @@
 // ------------------ Container ------------------ //
 .twohop-links-container {
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-  margin-top: 50px;
-}
-
-.twohop-links-section.twohop-type-block {
-  .twohop-links-block-container {
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 5px;
-    padding: 0.5em 0;
-  }
+    flex-direction: column;
+    gap: 1em;
+    margin-top: 1em;
+    margin-bottom: 50%;
+    font-size: 0.9em;
+}
 
-  // ------------------ Block ------------------ //
-  .twohop-links-box {
-    box-sizing: border-box;
-    width: 135px;
-    height: 90px;
 
-    white-space: pre-wrap;
-    overflow-wrap: break-word;
-    overflow: auto;
+.twohop-links-section {
+    // border: 1px solid var(--background-modifier-border);
 
-    padding: 5px;
+}
 
-    color: var(--text-normal);
+.twohop-links-section-container {
 
+
+    // display: flex;
+    // flex-direction: column;
+    // gap: 0.5em;
+    // padding: 0.5em;
+    // border-radius: 0.5em;
+
+
+}
+
+.twohop-links-section.twohop-type-list,
+.twohop-links-section-container {
     background-color: var(--background-primary);
-    border: 2px solid var(--background-secondary);
-    border-radius: 0.2em;
 
-    position: relative;
-  }
-
-  // ------------------ Header ------------------ //
-
-  .twohop-links-box-header {
-    font-size: 0.8em;
-    font-weight: bold;
-
-    color: var(--interactive-accent);
-
-    &:hover {
-      text-decoration: underline;
-      cursor: pointer;
-    }
-
-    border-bottom: 1px solid var(--interactive-accent);
-    width: 100%;
-
-    .twohop-links-twohop-links & {
-      color: var(--text-normal);
-      border-color: 1px solid var(--background-modifier-border);
-    }
-    .twohop-links-tag-links & {
-      color: var(ffd8d191);
-      border-color: #ffd8d191;
-    }
-    .twohop-links-new-links & {
-      color: var(--interactive-accent);
-      border-color: var(--interactive-accent);
-    }
-  }
-
-  // ------------------ Content ------------------ //
-
-  .twohop-links-box-preview {
-    position: absolute;
-    height: 100%;
-    top: 0;
-  }
-
-  .twohop-links-box-title {
-    position: relative;
-
-    padding: 0 0.3em;
-    display: inline;
-    border-radius: 0.2em;
-  }
-
-  .twohop-links-has-sumbnail .twohop-links-box-title {
-    background: rgba(0, 0, 0, 0.4);
-    color: white;
-    box-decoration-break: clone;
-  }
-}
-
-.twohop-links-box:hover {
-  text-decoration: underline;
-  cursor: pointer;
-}
-
-.twohop-links-box-header {
-  font-size: 0.8em;
-  font-weight: bold;
-  cursor: default;
-  text-decoration: none;
-}
-
-.twohop-links-section.twohop-type-list {
-  padding: 1em;
-  border: 1px solid var(--background-modifier-border);
-  border-radius: 0.5em;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5em;
-
-  .twohop-links-block-container {
+    padding: 0.5em;
+    border-radius: 0.5rem;
     display: flex;
     flex-direction: column;
     gap: 0.5em;
-  }
+}
 
-  .twohop-links-box:not(.twohop-links-box-header) {
-    display: list-item;
-    margin-left: 1em;
-  }
-
-  .twohop-links-box-container {
-    height: 1em;
+.twohop-links-section.twohop-type-block {
+    // border-radius: 0.5em;
     display: flex;
-    align-items: center;
-    gap: 0.5em;
-  }
+    // padding: 0.5em;
+    flex-direction: column;
 
-  .twohop-links-box-preview {
-    height: 100%;
-    object-fit: cover;
-  }
+
+    .twohop-links-block-container {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        // gap: 2px;
+        // display: grid;
+        // grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        // grid-gap: 2px;
+        // padding: 0.5em 0;
+        padding-left: 1.5em;
+    }
+
+
+    // ------------------ Block ------------------ //
+    .twohop-links-box {
+        box-sizing: border-box;
+
+        overflow: hidden;
+        display: -webkit-box;
+        text-overflow: ellipsis;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+
+
+        // white-space: pre-wrap;
+        // overflow-wrap: break-word;
+        // overflow: auto;
+
+        padding: 0.5em;
+
+        color: var(--text-normal);
+
+        // background-color: var(--background-primary);
+        // border: 1px solid var(--background-modifier-border);
+
+
+        position: relative;
+
+
+        border-radius: 0.5em;
+
+        &:hover {
+            background-color: var(--background-secondary);
+            cursor: pointer;
+        }
+    }
+
+    // ------------------ Header ------------------ //
+
+    .twohop-links-box-header {
+        // font-weight: bold;
+
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        // color: var(--interactive-accent);
+        padding: 0.5em;
+        border-radius: 0.5em;
+
+        &:hover {
+            background-color: var(--background-secondary);
+            cursor: pointer;
+        }
+
+
+        width: 100%;
+
+        .twohop-links-twohop-links & {
+            color: var(--text-normal);
+            border-color: 1px solid var(--background-modifier-border);
+        }
+
+        .twohop-links-tag-links & {
+            color: var(ffd8d191);
+            border-color: #ffd8d191;
+        }
+
+    }
+
+    &.twohop-links-new-links .twohop-links-box-header {
+        color: var(--text-faint);
+        border-color: var(--interactive-accent);
+
+        &:hover {
+            cursor: not-allowed;
+            background: none !important;
+        }
+    }
+
+    // ------------------ Content ------------------ //
+
+    .twohop-links-box-preview {
+        // position: absolute;
+        height: 1em;
+        max-width: 2em;
+        object-fit: cover;
+        // top: 0;
+        border-radius: 0;
+        box-shadow: none
+    }
+
+    .twohop-links-box-title {
+        position: relative;
+
+        padding: 0 0.3em;
+        display: inline;
+        border-radius: 0.2em;
+    }
+
+    .twohop-links-box {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .twohop-links-box-more {
+        display: flex;
+        align-items: center;
+    }
+}
+
+.twohop-links-box:hover {
+    cursor: pointer;
+}
+
+
+
+.twohop-links-section.twohop-type-list {
+
+
+
+
+    .twohop-links-block-container {
+        display: flex;
+        flex-direction: column;
+        // gap: 0.5em;
+    }
+
+
+    .twohop-links-box-container {
+        height: 1em;
+        display: flex;
+        align-items: center;
+        gap: 0.5em;
+    }
+
+    .twohop-links-box-preview {
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .twohop-links-box {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 5px;
+        padding: 0.5em 0.5em;
+        cursor: pointer;
+        border-radius: 0.5em;
+        white-space: wrap;
+
+
+        &:hover {
+            background-color: var(--background-secondary);
+        }
+    }
+}
+
+// Floating Button
+.twohop-links-floating-button {
+    position: fixed;
+    bottom: 2em;
+    right: 2em;
+    color: var(--text-normal);
+    border-radius: 0.5em;
+    padding: 0.4em 1em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: var(--shadow-s);
+    cursor: pointer;
+    z-index: 100;
+    transition: transform 0.2s, opacity 0.2s;
+
+    background-color: var(--background-primary);
+
+    gap: 0.5rem;
+
+    .twohop-links-floating-button-item {
+        display: flex;
+        align-items: center;
+        gap: 0.2em;
+    }
+
+    &:hover {
+        transform: translateY(-2px);
+    }
+
+    &.hidden {
+        transform: translateY(100px);
+        opacity: 0;
+        pointer-events: none;
+    }
+}
+
+// Container Wrapper (Single Instance)
+.twohop-links-container-wrapper {
+    // Static state (default): simply exists in the flow.
+    width: 100%;
+    transition: none; // Instant switch back to static
+    position: relative;
+
+    // Floating Mode
+    &.floating-mode {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 50vh;
+        background-color: var(--background-secondary);
+        z-index: 110;
+        // border-top-left-radius: 16px;
+        // border-top-right-radius: 16px;
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        animation: slide-up 0.3s cubic-bezier(0.2, 0, 0, 1);
+
+        &.no-animation {
+            animation: none;
+        }
+
+        .twohop-links-content-scrollable {
+            // scrollbar-color: var(--background-modifier-border) var(--background-primary);
+            // scrollbar-width: thin;
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+    }
+
+    .twohop-links-drawer-close {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        cursor: pointer;
+
+        &:hover {
+            color: var(--text-accent);
+        }
+    }
+
+
+    .twohop-links-content-scrollable {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+}
+
+@keyframes slide-up {
+    from {
+        transform: translateY(100%);
+    }
+
+    to {
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadein {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }

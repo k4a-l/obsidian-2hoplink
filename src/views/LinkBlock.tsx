@@ -1,5 +1,5 @@
+import { Link2Icon } from "lucide-react";
 import * as React from "react";
-
 import type { FileEntity } from "../type";
 
 export type LinkItemProps = {
@@ -11,6 +11,7 @@ export type LinkItemProps = {
     newLeaf: boolean,
   ) => void;
   getSumbnail: (fileEntity: FileEntity) => string;
+  icon?: React.ReactElement;
 };
 
 const LinkBlock = (props: LinkItemProps) => {
@@ -24,6 +25,7 @@ const LinkBlock = (props: LinkItemProps) => {
         props.onClick(props.sourcePath, props.fileEntity, event.ctrlKey)
       }
     >
+      {props.icon ? props.icon : <Link2Icon size={"1.2em"} />}
       {sumbnail && (
         <img
           className="twohop-links-box-preview"

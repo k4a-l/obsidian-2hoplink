@@ -1,3 +1,4 @@
+import { FileIcon } from "lucide-react";
 import * as React from "react";
 import type { FileEntity } from "../type";
 import LinkBlock from "./LinkBlock";
@@ -13,7 +14,8 @@ const LinkContainer = ({
   fileEntities: FileEntity[];
   onClick: React.ComponentProps<typeof LinkBlock>["onClick"];
   onBlockTitleClick?: (e: React.MouseEvent) => void;
-  title: string;
+  title?: string;
+  icon?: React.ReactElement;
   className: string;
   getSumbnail: (fileEntity: FileEntity) => string;
   type?: "block" | "list";
@@ -28,8 +30,10 @@ const LinkContainer = ({
   );
 
   React.useEffect(() => {
-    setCount(props.fileEntities.length);
-  }, [props.fileEntities.length]);
+    if (count < props.fileEntities.length) {
+      setCount(Math.min(props.fileEntities.length, VIEW_COUNT_BASE));
+    }
+  }, [props.fileEntities.length, count]);
 
   const Component = React.useMemo(
     () => (type === "block" ? LinkBlock : LinkList),
@@ -46,7 +50,8 @@ const LinkContainer = ({
         className={"twohop-links-box-header"}
         onClick={props.onBlockTitleClick}
       >
-        {props.title}
+        {<FileIcon size={"1.2em"} />}
+        {props.title ? props.title : ""}
       </div>
 
       <div className={`twohop-links-block-container`}>
@@ -57,19 +62,23 @@ const LinkContainer = ({
             onClick={props.onClick}
             sourcePath={props.sourcePath}
             getSumbnail={props.getSumbnail}
+            icon={props.icon}
           />
         ))}
         {count < props.fileEntities.length ? (
-          <Component
-            sourcePath={""}
-            fileEntity={{
-              path: "",
-              displayText: "...",
-              sumbnailPath: "",
-            }}
+          <div
+            // sourcePath={""}
+            // fileEntity={{
+            //   path: "",
+            //   displayText: "  ...  ",
+            //   sumbnailPath: "",
+            // }}
+            className="twohop-links-box twohop-links-box-more"
             onClick={() => setCount(count + VIEW_COUNT_BASE)}
-            getSumbnail={() => ""}
-          />
+            // getSumbnail={() => ""}
+          >
+            ...
+          </div>
         ) : null}
       </div>
     </div>

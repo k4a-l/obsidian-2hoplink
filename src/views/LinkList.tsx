@@ -1,5 +1,5 @@
+import { LogOutIcon } from "lucide-react";
 import * as React from "react";
-
 import type { LinkItemProps } from "./LinkBlock";
 
 const LinkList = (props: LinkItemProps) => {
@@ -13,6 +13,7 @@ const LinkList = (props: LinkItemProps) => {
         props.onClick(props.sourcePath, props.fileEntity, event.ctrlKey)
       }
     >
+      {props.icon ? props.icon : <LogOutIcon size={"1.2em"} />}
       <div className="twohop-links-box-container">
         {/* {sumbnail && (
           <img

@@ -84,8 +84,6 @@ describe("make twohop", () => {
     },
   ];
 
-  console.log(backlinkMap.get(favoriteFoot.path));
-
   test("forward", () => {
     expect(
       makeTwoHopLinks(currentFile.path, fowardLinkMap, backlinkMap, "forward"),
