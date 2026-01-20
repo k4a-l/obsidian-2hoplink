@@ -28,12 +28,13 @@ const LinkContainer = ({
         : VIEW_COUNT_BASE,
     ),
   );
+  const countRef = React.useRef(count);
 
   React.useEffect(() => {
-    if (count < props.fileEntities.length) {
+    if (countRef.current < props.fileEntities.length) {
       setCount(Math.min(props.fileEntities.length, VIEW_COUNT_BASE));
     }
-  }, [props.fileEntities.length, count]);
+  }, [props.fileEntities.length]);
 
   const Component = React.useMemo(
     () => (type === "block" ? LinkBlock : LinkList),
@@ -74,10 +75,10 @@ const LinkContainer = ({
             //   sumbnailPath: "",
             // }}
             className="twohop-links-box twohop-links-box-more"
-            onClick={() => setCount(count + VIEW_COUNT_BASE)}
+            onClick={() => setCount(props.fileEntities.length)}
             // getSumbnail={() => ""}
           >
-            ...
+            ... {props.fileEntities.length}
           </div>
         ) : null}
       </div>
