@@ -50,7 +50,7 @@ const LinkContainer = ({
     [type],
   );
 
-  if (props.fileEntities.length === 0) return <></>;
+  if (props.fileEntities.length === 0) return null;
 
   const isHeaderShown = props.title || canFold;
 

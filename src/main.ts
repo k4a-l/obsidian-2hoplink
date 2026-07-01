@@ -50,7 +50,7 @@ export default class TwohopLink extends Plugin {
           this.render();
         }
       }),
-      this.app.metadataCache.on("resolve", (file) => {
+      this.app.metadataCache.on("resolve", (_file) => {
         if (this.app.workspace.getActiveFile() && this.enable) {
           this.debouncedRender();
         }
@@ -105,7 +105,7 @@ export default class TwohopLink extends Plugin {
             has: linkedPathSet.has.bind(linkedPathSet),
             add: linkedPathSet.add.bind(linkedPathSet),
           }
-        : { has: (v: string) => false, add: (v: string) => linkedPathSet };
+        : { has: (_v: string) => false, add: (_v: string) => linkedPathSet };
     const isFirst = (path: string) => {
       if (!getLinkedPathSet().has(path)) {
         getLinkedPathSet().add(path);

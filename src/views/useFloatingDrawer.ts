@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
-export const useFloatingDrawer = (hasLinks: boolean) => {
+export const useFloatingDrawer = (_hasLinks: boolean) => {
   const [isFloating, setIsFloating] = useState(false);
   const [userEnabledFloating, setUserEnabledFloating] = useState(false);
   const [isNoAnimation, setIsNoAnimation] = useState(false);

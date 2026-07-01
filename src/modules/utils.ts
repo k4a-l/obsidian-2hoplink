@@ -14,4 +14,4 @@ export const path2FileEntity = (src: string): FileEntity => ({
 });
 
 export const isDailyNote = (file: FileEntity): boolean =>
-  getDateFromPath(file.path, "day") !== null;
+  getDateFromPath(file.path || "", "day") !== null;

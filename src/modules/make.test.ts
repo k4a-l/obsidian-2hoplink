@@ -99,5 +99,5 @@ describe("make twohop", () => {
 
 // const printMap = (map: Map<any, any>) => printObject([...map]);
 
-const printObject = (object: unknown) =>
+const _printObject = (object: unknown) =>
   console.log(JSON.stringify(object, null, 4));
