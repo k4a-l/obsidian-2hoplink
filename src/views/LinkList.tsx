@@ -14,17 +14,8 @@ const LinkList = (props: LinkItemProps) => {
       }
     >
       {props.icon ? props.icon : <LogOutIcon size={"1.2em"} />}
-      <div className="twohop-links-box-container">
-        {/* {sumbnail && (
-          <img
-            className="twohop-links-box-preview"
-            src={props.getSumbnail(props.fileEntity)}
-            alt={"preview image"}
-          />
-        )} */}
-        <div className="twohop-links-box-title">
-          {props.fileEntity.displayText}
-        </div>
+      <div className="twohop-links-box-title">
+        {props.fileEntity.displayText}
       </div>
     </div>
   );

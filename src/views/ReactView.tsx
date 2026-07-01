@@ -31,6 +31,8 @@ const LinksContent = (props: Props) => (
       className={"twohop-links-back-links"}
       getSumbnail={props.getSumbnail}
       type={`list`}
+      canFold
+      defaultFolded
     />
     <LinkContainer
       sourcePath={props.sourcePath}

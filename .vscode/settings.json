@@ -31,5 +31,6 @@
   },
   "[scss]": {
     "editor.defaultFormatter": "vscode.css-language-features"
-  }
+  },
+  "biome.lsp.bin": "./node_modules/@biomejs/biome/bin/biome.ps1"
 }

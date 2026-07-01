@@ -62,23 +62,17 @@
         box-sizing: border-box;
 
         overflow: hidden;
-        display: -webkit-box;
+        display: flex;
         text-overflow: ellipsis;
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 2;
         line-clamp: 2;
 
 
-        // white-space: pre-wrap;
-        // overflow-wrap: break-word;
-        // overflow: auto;
 
         padding: 0.5em;
 
         color: var(--text-normal);
-
-        // background-color: var(--background-primary);
-        // border: 1px solid var(--background-modifier-border);
 
 
         position: relative;
@@ -86,9 +80,15 @@
 
         border-radius: 0.5em;
 
+
+
         &:hover {
             background-color: var(--background-secondary);
             cursor: pointer;
+        }
+
+        svg {
+            flex-shrink: 0;
         }
     }
 
@@ -152,6 +152,9 @@
         padding: 0 0.3em;
         display: inline;
         border-radius: 0.2em;
+
+        white-space: wrap;
+
     }
 
     .twohop-links-box {
@@ -180,13 +183,6 @@
     }
 
 
-    .twohop-links-box-container {
-        height: 1em;
-        display: flex;
-        align-items: center;
-        gap: 0.5em;
-    }
-
     .twohop-links-box-preview {
         height: 100%;
         object-fit: cover;
@@ -195,7 +191,7 @@
     .twohop-links-box {
         display: flex;
         flex-direction: row;
-        flex-wrap: wrap;
+        // flex-wrap: wrap;
         align-items: center;
         gap: 5px;
         padding: 0.5em 0.5em;
@@ -207,6 +203,25 @@
         &:hover {
             background-color: var(--background-secondary);
         }
+
+        svg {
+            flex-shrink: 0;
+        }
+    }
+}
+
+
+.twohop-links-box-header-fold {
+    margin-left: auto;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    cursor: pointer;
+    padding: 0.2em 0.5em;
+    border-radius: 0.5em;
+
+    &:hover {
+        background-color: var(--background-secondary);
     }
 }
 
