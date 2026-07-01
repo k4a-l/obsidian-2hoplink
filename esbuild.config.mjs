@@ -1,7 +1,6 @@
 import builtins from "builtin-modules";
 import esbuild from "esbuild";
 import { copy } from "esbuild-plugin-copy";
-import { sassPlugin } from "esbuild-sass-plugin";
 import process from "process";
 
 const banner = `/*
@@ -14,7 +13,7 @@ const BASE_CONFIG = {
   banner: {
     js: banner,
   },
-  entryPoints: ["./src/main.ts", "./src/styles.scss"],
+  entryPoints: ["./src/main.ts", "./src/styles.css"],
   bundle: true,
   external: [
     "obsidian",
@@ -61,7 +60,6 @@ const DEV_CONDIG = {
   sourcemap: "inline",
   outdir: ".",
   plugins: [
-    sassPlugin(),
     copy({
       resolveFrom: "cwd",
       assets: {
