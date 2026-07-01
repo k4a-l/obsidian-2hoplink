@@ -46,6 +46,7 @@
   "dependencies": {
     "esbuild-sass-plugin": "^2.4.5",
     "lucide-react": "^0.562.0",
+    "obsidian-daily-notes-interface": "^0.9.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   }

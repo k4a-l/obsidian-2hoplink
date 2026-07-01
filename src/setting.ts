@@ -6,6 +6,7 @@ export interface TwohopLinkSettings {
   effectiveExtension: string[];
   excludesDuplicateLinks: boolean;
   excludeTag: boolean;
+  excludeDailyNote: boolean;
 }
 
 export class SampleSettingTab extends PluginSettingTab {
@@ -44,6 +45,19 @@ export class SampleSettingTab extends PluginSettingTab {
           .onChange(async (value) => {
             this.plugin.settings.effectiveExtension = value.split(",");
             await this.plugin.saveSettings();
+          });
+      });
+
+    new Setting(containerEl)
+      .setName("Exclude daily notes")
+      .setDesc("Exclude daily notes from all link views.")
+      .addToggle((toggle) => {
+        toggle
+          .setValue(this.plugin.settings.excludeDailyNote)
+          .onChange(async (value) => {
+            this.plugin.settings.excludeDailyNote = value;
+            await this.plugin.saveSettings();
+            this.plugin.render();
           });
       });
 

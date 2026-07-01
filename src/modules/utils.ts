@@ -1,3 +1,4 @@
+import { getDateFromPath } from "obsidian-daily-notes-interface";
 import type { FileEntity } from "src/type";
 
 export const removeBlockReference = (src: string): string =>
@@ -12,5 +13,5 @@ export const path2FileEntity = (src: string): FileEntity => ({
   sumbnailPath: "",
 });
 
-export const isDailyNote = (filePath: string): boolean =>
-  filePath.match(/\d{4}-\d{2}-\d{2}\.md$/u) !== null;
+export const isDailyNote = (file: FileEntity): boolean =>
+  getDateFromPath(file.path, "day") !== null;

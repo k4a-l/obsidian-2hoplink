@@ -19,6 +19,7 @@ const DEFAULT_SETTINGS: TwohopLinkSettings = {
   excludesDuplicateLinks: true,
   excludeTag: false,
   effectiveExtension: [],
+  excludeDailyNote: true,
 };
 
 export default class TwohopLink extends Plugin {
@@ -76,7 +77,7 @@ export default class TwohopLink extends Plugin {
     this.removeView();
   }
 
-  private render() {
+  render() {
     if (!this.enable) {
       return;
     }
@@ -89,6 +90,13 @@ export default class TwohopLink extends Plugin {
 
     const activeFileCache = this.app.metadataCache.getFileCache(activeFile);
     if (!activeFileCache) return;
+
+    const filterDailyNote = (it: FileEntity) => {
+      if (this.settings.excludeDailyNote) {
+        return !isDailyNote(it);
+      }
+      return true;
+    };
 
     const linkedPathSet = new Set<string>();
     const getLinkedPathSet = () =>
@@ -122,9 +130,9 @@ export default class TwohopLink extends Plugin {
       unresolvedLinks: unresolvedFowardLinks,
     });
 
-    const fowardLinkMap = getForwardLinks(activeFile, activeFileCache).filter(
-      (it) => isFirst(it.path),
-    );
+    const fowardLinkMap = getForwardLinks(activeFile, activeFileCache)
+      .filter((it) => isFirst(it.path))
+      .filter(filterDailyNote);
 
     const [forwardResolvedLinks, newLinks] = this.splitByResolve(
       activeFile,
@@ -141,6 +149,7 @@ export default class TwohopLink extends Plugin {
 
     const backlinks: FileEntity[] = getLinks(activeFile, backLinkMap)
       .filter((it) => isFirst(it.path))
+      .filter(filterDailyNote)
       .sort((a, b) =>
         a.displayText < b.displayText
           ? -1
@@ -175,23 +184,30 @@ export default class TwohopLink extends Plugin {
       ...resolvedTwoHopLinks,
       ...unresolvedTwoHopLinks,
       //   ...backTwoHopLinks,
-    ].forEach((link) => {
-      if (twohopMap.has(link.path)) return;
-      twohopMap.set(link.path, {
-        ...link,
-        links: link.links
-          .filter((it) => isFirst(it.path))
-          .filter((it) => !isDailyNote(it.path)),
+    ]
+      .filter(filterDailyNote)
+      .forEach((link) => {
+        if (twohopMap.has(link.path)) return;
+        twohopMap.set(link.path, {
+          ...link,
+          links: link.links
+            .filter((it) => isFirst(it.path))
+            .filter(filterDailyNote),
+        });
       });
-    });
 
     const tagLinksList = this.settings.excludeTag
       ? []
-      : this.getTagLinksList(activeFile, activeFileCache, resolvedFowardLinks);
+      : this.getTagLinksList(activeFile, activeFileCache, resolvedFowardLinks)
+          .map((t) => ({
+            ...t,
+            links: t.links.filter(filterDailyNote),
+          }))
+          .filter((t) => t.links.length > 0);
 
     this.injectView({
       sourcePath: activeFile.path,
-      forwardResolvedLinks: forwardResolvedLinks.filter(
+      forwardResolvedLinks: forwardResolvedLinks.filter(filterDailyNote).filter(
         (it) =>
           // backLinkにあるものは除外
           !backlinks.find((link) => link?.path === it.path),
@@ -199,9 +215,15 @@ export default class TwohopLink extends Plugin {
       backwardConnectedLinks: backlinks,
       twohopLinks: [...twohopMap.values()],
       tagLinksList,
-      newLinks,
+      newLinks: newLinks.filter(filterDailyNote),
       onClick: this.openFile.bind(this),
       getSumbnail: this.getSumbnail.bind(this),
+      excludeDailyNote: this.settings.excludeDailyNote,
+      onToggleExcludeDailyNote: async () => {
+        this.settings.excludeDailyNote = !this.settings.excludeDailyNote;
+        await this.saveSettings();
+        this.render();
+      },
     });
   }
 

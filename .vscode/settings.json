@@ -30,7 +30,7 @@
     "editor.defaultFormatter": "biomejs.biome"
   },
   "[scss]": {
-    "editor.defaultFormatter": "vscode.css-language-features"
+    "editor.defaultFormatter": "biomejs.biome"
   },
   "biome.lsp.bin": "./node_modules/@biomejs/biome/bin/biome.ps1"
 }

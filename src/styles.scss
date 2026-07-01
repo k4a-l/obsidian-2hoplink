@@ -338,3 +338,36 @@
         opacity: 1;
     }
 }
+
+// Footer Settings (Simple Button)
+.twohop-links-footer-settings {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0.2rem 0.5rem;
+    margin-top: 0.5rem;
+
+    .twohop-links-footer-button {
+        background: transparent;
+        border: none;
+        padding: 6px;
+        border-radius: 4px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-muted);
+        transition: opacity 0.2s, background-color 0.2s, color 0.2s;
+
+        &:hover {
+            background-color: var(--background-modifier-hover);
+            color: var(--text-normal);
+        }
+
+
+
+        svg {
+            display: block;
+        }
+    }
+}

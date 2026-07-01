@@ -1,4 +1,6 @@
 import {
+  Calendar,
+  CalendarOff,
   ChevronUpIcon,
   FileInputIcon,
   FileOutputIcon,
@@ -19,6 +21,8 @@ export type Props = {
   tagLinksList: TagLinks[];
   onClick: React.ComponentProps<typeof LinkContainer>["onClick"];
   getSumbnail: (fileEntity: FileEntity) => string;
+  excludeDailyNote: boolean;
+  onToggleExcludeDailyNote: () => void;
 };
 
 const LinksContent = (props: Props) => (
@@ -84,6 +88,26 @@ const LinksContent = (props: Props) => (
         />
       </div>
     )}
+    <div className="twohop-links-footer-settings">
+      <button
+        className={`twohop-links-footer-button ${
+          props.excludeDailyNote ? "is-excluded" : ""
+        }`}
+        onClick={props.onToggleExcludeDailyNote}
+        title={
+          props.excludeDailyNote
+            ? "Show daily notes in links"
+            : "Exclude daily notes from links"
+        }
+        type="button"
+      >
+        {props.excludeDailyNote ? (
+          <CalendarOff size="1.2em" />
+        ) : (
+          <Calendar size="1.2em" />
+        )}
+      </button>
+    </div>
   </>
 );
 
